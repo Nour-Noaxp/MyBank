@@ -1,6 +1,5 @@
 from django.db import models
 
-# Create your models here.
 class Budget(models.Model):
   name = models.CharField(max_length=50, null=False)
   ready_to_assign = models.IntegerField(default=0)
