@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.contrib import messages
 from .models import Account
 from .forms import AccountForm
-# Create your views here.
+
 def home(request):
-  return render(request, "home.html", {})
+  return render(request, "home.html")
 
 def create_account(request):
   submitted = False
