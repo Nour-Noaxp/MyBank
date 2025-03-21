@@ -11,7 +11,14 @@ class Budget(models.Model):
 class Account(models.Model):
   budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
   name = models.CharField(max_length=50, null=False)
-  #type = models.TextChoices("Cash Accounts", "Credit Accounts", "Mortgages and Loans", "Tracking Accounts")
+
+  class AccountType(models.TextChoices):
+    CASH_ACCOUNTS = "Cash Account"
+    CREDIT_ACCOUNTS = "Credit Accounts"
+    MORTGAGES_AND_LOANS = "Mortgages and Loans"
+    TRACKING_ACCOUNTS = "Tracking Accounts"
+
+  type = models.CharField(max_length=20, choices=AccountType.choices, default=AccountType.CASH_ACCOUNTS)
   working_balance = models.IntegerField(default=0)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
