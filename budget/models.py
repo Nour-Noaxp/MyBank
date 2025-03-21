@@ -6,14 +6,19 @@ class Budget(models.Model):
   ready_to_assign = models.IntegerField(default=0)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
+  def __str__(self):
+      return self.name
 
 class Account(models.Model):
   budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
   name = models.CharField(max_length=50, null=False)
-  type = models.TextChoices("Cash Accounts", "Credit Accounts", "Mortgages and Loans", "Tracking Accounts")
+  #type = models.TextChoices("Cash Accounts", "Credit Accounts", "Mortgages and Loans", "Tracking Accounts")
   working_balance = models.IntegerField(default=0)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
+
+  def __str__(self):
+    return self.name
 
 class Category(models.Model):
   budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
@@ -22,6 +27,9 @@ class Category(models.Model):
   available = models.IntegerField(default=0)
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
+  
+  def __str__(self):
+    return self.name
 
 class Transaction(models.Model):
   account = models.ForeignKey(Account, on_delete=models.CASCADE)

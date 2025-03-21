@@ -1,0 +1,10 @@
+<center>
+  <h1>Update Accout :</h1>
+  <br/><br/>
+  <form action="" method=POST>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <br/>
+    <input type="submit" value="Update" class="btn btn-secondary">
+  </form>
+</center>
