@@ -7,17 +7,14 @@ def home(request):
   return render(request, "home.html")
 
 def create_account(request):
-  submitted = False
+  form = AccountForm
   if request.method == "POST":
     form = AccountForm(request.POST)
     if form.is_valid():
       form.save()
-      return HttpResponseRedirect("/create_account?submitted=True")
-  else:
-    form = AccountForm
-    if "submitted" in request.GET:
-      submitted = "True"
-  return render (request, "create_account.html", {"form": form, "submitted": submitted})
+      messages.success(request, "Account Successfully Created!")
+      return redirect("show-account")
+  return render(request, "create_account.html", {"form": form})
 
 def show_account(request, account_id):
   account = Account.objects.get(pk=account_id)
@@ -25,16 +22,16 @@ def show_account(request, account_id):
 
 def list_accounts(request):
   accounts = Account.objects.all()
-  return render (request, "accounts.html", {"accounts": accounts})
+  return render(request, "accounts.html", {"accounts": accounts})
 
-def update_account(request, account_id):
+def edit_account(request, account_id):
   account = Account.objects.get(pk=account_id)
   form = AccountForm(request.POST or None, instance=account)
   if form.is_valid():
     form.save()
     messages.success(request, "Account Successfully Updated!")
     return redirect("list-accounts")
-  return render(request, "update_account.html", {"account": account, "form": form})
+  return render(request, "edit_account.html", {"account": account, "form": form})
 
 def delete_account(request, account_id):
   account = Account.objects.get(pk=account_id)

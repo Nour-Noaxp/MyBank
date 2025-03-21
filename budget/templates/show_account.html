@@ -1,8 +1,11 @@
-<h1>Show Account</h1>
-<strong>{{ account }}</strong>
-<ul>
-  <li>Name : {{ account.name }}</Li>
-  <li>Type : {{ account.type }}</Li>
-  <li>Working Balance : {{ account.working_balance }}</Li>
-  <li>Created At : {{ account.created_at }}</Li>
-</ul>
+{% extends "base.html" %}
+{% block content %}
+  <h1>Show Account</h1>
+  <strong>{{ account }}</strong>
+  <ul>
+    <li>Name : {{ account.name }}</Li>
+    <li>Type : {{ account.kind }}</Li>
+    <li>Working Balance : {{ account.working_balance }}</Li>
+    <li>Created At : {{ account.created_at }}</Li>
+  </ul>
+{% endblock %}
