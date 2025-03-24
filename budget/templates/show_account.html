@@ -1,11 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-  <h1>Show Account</h1>
-  <strong>{{ account }}</strong>
-  <ul>
-    <li>Name : {{ account.name }}</Li>
-    <li>Type : {{ account.kind }}</Li>
-    <li>Working Balance : {{ account.working_balance }}</Li>
-    <li>Created At : {{ account.created_at }}</Li>
-  </ul>
+  <h2 class="font-semibold text-gray-900 mb-4">Show Account</h2>
+  <div class="w-full max-w-sm min-w-[200px]">
+    <label class="block mb-2 text-sm text-slate-600">Name :</label>
+    <div class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500 light:shadow-xs-light">{{ account.name }}</div>
+  </div>
+  <div class="w-full max-w-sm min-w-[200px]">
+    <label class="block mb-2 text-sm text-slate-600">Type :</label>
+    <div class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500 light:shadow-xs-light">{{ account.kind }}</div>
+  </div>
+  <div class="w-full max-w-sm min-w-[200px]">
+    <label class="block mb-2 text-sm text-slate-600">Working Balance :</label>
+    <div class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500 light:shadow-xs-light">{{ account.working_balance }}</div>
+  </div>
+  <div class="w-full max-w-sm min-w-[200px]">
+    <label class="block mb-2 text-sm text-slate-600">Created At :</label>
+    <div class="shadow-xs bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 light:bg-gray-700 light:border-gray-600 light:text-white light:focus:ring-blue-500 light:focus:border-blue-500 light:shadow-xs-light">{{ account.created_at }}</div>
+  </div>
 {% endblock %}

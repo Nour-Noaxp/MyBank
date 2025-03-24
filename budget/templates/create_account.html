@@ -1,11 +1,33 @@
 {% extends "base.html" %}
+{% load custom_filters %}
 {% block content %}
   <div class="text-center">
-    <h1>Create a new Accout :</h1>
+    <h2 class="font-semibold text-gray-900">Create a new Accout :</h2>
     <form action="" method=POST>
       {% csrf_token %}
-      {{ form.as_p }}
-      <input type="submit" value="submit" class="btn btn-secondary">
+      {% if form.non_field_errors %}
+        {% for error in form.non_field_errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      {% endif %}
+      <div class="py-2 flex gap-4">
+        <label for="budget" class="font-semibold">Budget :</label>
+        <div>{{ form.budget|add_class:"bg-slate-50 max-w-4xl border-2 border-slate-200 rounded-lg p-2" }}</div>
+      </div>
+      <div class="py-2 flex gap-4">
+        <label for="name" class="font-semibold">Name :</label>
+        <div>{{ form.name|add_class:"bg-slate-50 max-w-4xl border-2 border-slate-200 rounded-lg p-2" }}</div>
+      </div>
+      <div class="py-2 flex gap-4">
+        <label for="kind" class="font-semibold">Kind:</label>
+        <div>{{ form.kind|add_class:"bg-slate-50 max-w-4xl border-2 border-slate-200 rounded-lg p-2" }}</div>
+      </div>
+      <div class="py-2 flex gap-4">
+        <label for="working_balance" class="font-semibold">Working Balance :</label>
+        <div>{{ form.working_balance|add_class:"bg-slate-50 max-w-4xl border-2 border-slate-200 rounded-lg p-2" }}</div>
+      </div>
+      {% comment %} {{ form.as_p }} {% endcomment %}
+      <input type="submit" value="submit" class="font-semibold text-indigo-600 hover:text-indigo-900">
     </form>
   </div>
 {% endblock %}
