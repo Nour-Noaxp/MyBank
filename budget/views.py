@@ -18,7 +18,7 @@ def account_create_view(request):
       account.budget = budget
       form.save()
       messages.success(request, "Account Successfully Created!")
-      return redirect("account-show")
+      return redirect("account-show", account_id=account.id)
   return render(request, "account_create.html", {"form": form})
 
 def account_show_view(request, account_id):
