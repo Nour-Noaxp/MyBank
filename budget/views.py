@@ -10,14 +10,16 @@ def homepage_view(request):
 def account_create_view(request):
   form = AccountForm
   budget = Budget.objects.first()
-  kinds = Account.AccountKind.choices
+  budget = get_object_or_404(Budget, pk=budget.id)
   if request.method == "POST":
     form = AccountForm(request.POST)
     if form.is_valid():
+      account = form.save(commit=False)
+      account.budget = budget
       form.save()
       messages.success(request, "Account Successfully Created!")
       return redirect("account-show")
-  return render(request, "account_create.html", {"form": form, "budget": budget, "kinds": kinds})
+  return render(request, "account_create.html", {"form": form})
 
 def account_show_view(request, account_id):
   account = get_object_or_404(Account, pk=account_id)

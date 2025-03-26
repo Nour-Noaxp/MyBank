@@ -7,4 +7,4 @@ class AccountForm(ModelForm):
   # budget = forms.CharField(disabled=True)
   class Meta:
     model = Account
-    fields = ("budget", "name", "kind", "working_balance")
+    fields = ("name", "kind", "working_balance")
