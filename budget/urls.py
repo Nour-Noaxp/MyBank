@@ -8,4 +8,10 @@ urlpatterns = [
   path("show_account/<account_id>", views.show_account, name="show-account"),
   path("edit_account/<account_id>", views.edit_account, name="edit-account"),
   path("delete_account/<account_id>", views.delete_account, name="delete-account"),
+
+  path("categories", views.list_categories, name="list-categories"),
+  path("create_category",views.create_category, name="create-category"),
+  path("show_category/<category_id>", views.show_category, name="show-category"),
+  path("edit_category/<category_id>", views.edit_category, name="edit-category"),
+  path("delete_category/<category_id>", views.delete_category, name="delete-category"),
 ]
