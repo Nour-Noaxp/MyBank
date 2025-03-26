@@ -14,7 +14,7 @@
       <div>{{ form.name|add_class:"border rounded-md p-2 mt-2 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" }}</div>
     </div>
     <div class="col-span-1">
-      <label for="kind" class="text-md/6 font-medium text-gray-900">Kind</label>
+      <label for="kind" class="text-md/6 font-medium text-gray-900">Type</label>
       <div>{{ form.kind|add_class:"border rounded-md p-2 mt-2 w-52 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" }}</div>
     </div>
     <div class="col-span-1 mb-4">
@@ -22,7 +22,7 @@
       <div>{{ form.working_balance|add_class:"border rounded-md p-2 mt-2 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" }}</div>
     </div>
     <input type="submit" value="{% block button_value %}{% endblock %}" class="border rounded-md bg-indigo-600 px-4 py-2 font-semibold text-white hover:bg-indigo-500 col-span-full justify-self-end">
-    <div class="border-b border-gray-900/10 px-4 py-4 mx-auto w-[400px] col-span-full"></div>
+    <div class="border-b border-gray-900/10 px-4 py-4 mx-auto w-96 col-span-full"></div>
   </form>
   <div class="grid justify-self-end mr-20 ">
     <a href="{% block return_url %}{% endblock %}" class="border rounded-md bg-gray-600 px-4 py-2 font-semibold text-white hover:bg-gray-500 col-span-full justify-self-end">Return</a>
