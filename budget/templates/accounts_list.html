@@ -18,9 +18,9 @@
           <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ account.kind }}</td>
           <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ account.working_balance }}</td>
           <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ account.created_at }}</td>
-          <td class="py-4 px-3 pl-4 font-medium text-gray-500"><a href="{% url "show-account" account.id %}" class="text-indigo-600 hover:text-indigo-900"> Show</a></td>
-          <td class="py-4 px-3 pl-4 font-medium text-gray-500"><a href="{% url "edit-account" account.id %}" class="text-indigo-600 hover:text-indigo-900"> Edit</a></td>
-          <td class="py-4 px-3 pl-4 font-medium text-gray-500"><a href="{% url "delete-account" account.id %}" class="text-indigo-600 hover:text-indigo-900"> Delete</a></td>
+          <td class="py-4 px-3 pl-4 font-medium text-gray-500"><a href="{% url "account-show" account.id %}" class="text-indigo-600 hover:text-indigo-900"> Show</a></td>
+          <td class="py-4 px-3 pl-4 font-medium text-gray-500"><a href="{% url "account-edit" account.id %}" class="text-indigo-600 hover:text-indigo-900"> Edit</a></td>
+          <td class="py-4 px-3 pl-4 font-medium text-gray-500"><a href="{% url "account-delete" account.id %}" class="text-indigo-600 hover:text-indigo-900"> Delete</a></td>
         </tr>
         {% endfor %}
       </tbody>

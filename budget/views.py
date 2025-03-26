@@ -1,40 +1,46 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Account
+from .models import Budget
 from .forms import AccountForm
 
-def home(request):
-  return render(request, "home.html")
+def homepage_view(request):
+  return render(request, "homepage.html")
 
-def create_account(request):
+def account_create_view(request):
   form = AccountForm
+  budget = Budget.objects.first()
+  budget = get_object_or_404(Budget, pk=budget.id)
   if request.method == "POST":
     form = AccountForm(request.POST)
     if form.is_valid():
+      account = form.save(commit=False)
+      account.budget = budget
       form.save()
       messages.success(request, "Account Successfully Created!")
-      return redirect("show-account")
-  return render(request, "create_account.html", {"form": form})
+      return redirect("account-show", account_id=account.id)
+  return render(request, "account_create.html", {"form": form})
 
-def show_account(request, account_id):
+def account_show_view(request, account_id):
+  account = get_object_or_404(Account, pk=account_id)
   account = Account.objects.get(pk=account_id)
-  return render(request, "show_account.html", {"account": account})
+  return render(request, "account_show.html", {"account": account})
 
-def list_accounts(request):
+def accounts_list_view(request):
   accounts = Account.objects.all()
-  return render(request, "accounts.html", {"accounts": accounts})
+  return render(request, "accounts_list.html", {"accounts": accounts})
 
-def edit_account(request, account_id):
-  account = Account.objects.get(pk=account_id)
+def account_edit_view(request, account_id):
+  account = get_object_or_404(Account, pk=account_id)
   form = AccountForm(request.POST or None, instance=account)
   if form.is_valid():
     form.save()
     messages.success(request, "Account Successfully Updated!")
-    return redirect("list-accounts")
-  return render(request, "edit_account.html", {"account": account, "form": form})
+    return redirect("accounts-list")
+  return render(request, "account_edit.html", {"account": account, "form": form})
 
-def delete_account(request, account_id):
-  account = Account.objects.get(pk=account_id)
+def account_delete_view(request, account_id):
+  account = get_object_or_404(Account, pk=account_id)
   account.delete()
   messages.success(request, "Account Successfully Deleted!")
-  return redirect("list-accounts")
+  return redirect("accounts-list")
