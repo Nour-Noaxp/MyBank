@@ -12,7 +12,6 @@ class Budget(models.Model):
 
 class Account(models.Model):
   budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
-  readonly_fields = ("budget",)
   name = models.CharField(max_length=50, blank=False, null=False)
 
 
@@ -31,7 +30,6 @@ class Account(models.Model):
 
 class Category(models.Model):
   budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
-  readonly_fields = ("budget",)
   name = models.CharField(max_length=50, blank=False, null=False)
   activity = models.IntegerField(default=0)
   available = models.IntegerField(default=0)

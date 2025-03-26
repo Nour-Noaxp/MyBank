@@ -10,7 +10,6 @@ def homepage_view(request):
 def account_create_view(request):
   form = AccountForm
   budget = Budget.objects.first()
-  budget = get_object_or_404(Budget, pk=budget.id)
   if request.method == "POST":
     form = AccountForm(request.POST)
     if form.is_valid():
