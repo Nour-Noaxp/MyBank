@@ -33,7 +33,7 @@ def edit_account(request, account_id):
     form.save()
     messages.success(request, "Account Successfully Updated!")
     return redirect("list-accounts")
-  return render(request, "edit_account.html", {"account": account, "form": form})
+  return render(request, "edit_account.html", {"account": account, "form": form, "account_id": account.id})
 
 def delete_account(request, account_id):
   account = Account.objects.get(pk=account_id)
@@ -67,7 +67,7 @@ def edit_category(request, category_id):
     form.save()
     messages.success(request, "Category Successfully Updated!")
     return redirect("list-categories")
-  return render(request, "edit_category.html", {"category": category, "form": form})
+  return render(request, "edit_category.html", {"category": category, "form": form, "category_id": category.id})
 
 def delete_category(request, category_id):
   category = Category.objects.get(pk=category_id)
