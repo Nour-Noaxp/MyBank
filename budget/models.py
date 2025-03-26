@@ -8,13 +8,10 @@ class Budget(models.Model):
 
   def __str__(self):
     return self.name
-  
 
 class Account(models.Model):
   budget = models.ForeignKey(Budget, on_delete=models.CASCADE)
-  readonly_fields = ("budget",)
   name = models.CharField(max_length=50, blank=False, null=False)
-
 
   class AccountKind(models.TextChoices):
     CHECKING = "Checking"
