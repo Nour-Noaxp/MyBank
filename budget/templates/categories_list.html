@@ -19,11 +19,11 @@
         <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.available }}</td>
         <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.created_at }}</td>
         <td class="py-4 px-3 pl-4 font-medium text-gray-500">
-          <a href="{% url "category-show" category.id %}" class="text-indigo-600 hover:text-indigo-900"> Show</a></td>
+          <a href="{% url "category-show" category.id %}" class="text-indigo-600 hover:text-indigo-900">Show</a></td>
         <td class="py-4 px-3 pl-4 font-medium text-gray-500">
-          <a href="{% url "category-edit" category.id %}" class="text-indigo-600 hover:text-indigo-900"> Edit</a></td>
+          <a href="{% url "category-edit" category.id %}" class="text-indigo-600 hover:text-indigo-900">Edit</a></td>
         <td class="py-4 px-3 pl-4 font-medium text-gray-500">
-          <a href="{% url "category-delete" category.id %}" class="text-indigo-600 hover:text-indigo-900"> Delete</a></td>
+          <a href="{% url "category-delete" category.id %}" class="text-indigo-600 hover:text-indigo-900">Delete</a></td>
       </tr>
       {% endfor %}
     </tbody>

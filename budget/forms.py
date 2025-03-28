@@ -1,4 +1,3 @@
-from django import forms
 from django.forms import ModelForm
 from .models import Account, Category
 
@@ -12,4 +11,4 @@ class AccountForm(ModelForm):
 class CategoryForm(ModelForm):
     class Meta:
         model = Category
-        fields = ("name", "activity", "available")
+        fields = ("name",)
