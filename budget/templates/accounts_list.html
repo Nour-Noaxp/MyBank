@@ -1,28 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
-<h1 class="font-semibold text-gray-900 text-center text-xl mt-4 pb-9">All Accounts</h1>
-    <table class="w-full bg-white rounded-xl">
-      <thead class="border-b border-gray-300">
-        <tr>
-          <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Account</th>
-          <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Account Type</th>
-          <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Working Balance</th>
-          <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Created At</th>
-          <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for account in accounts %}
+  <h1 class="font-semibold text-gray-900 text-center text-xl mt-4 pb-9">All Accounts</h1>
+  <table class="w-full bg-white rounded-xl">
+    <thead class="border-b border-gray-300">
+      <tr>
+        <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Account</th>
+        <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Account Type</th>
+        <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Working Balance</th>
+        <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Created At</th>
+        <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for account in accounts %}
         <tr class="border-b border-gray-200">
           <td class="py-4 pr-3 pl-4 text-md/6 font-medium text-gray-900">{{ account.name }}</td>
           <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ account.kind }}</td>
           <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ account.working_balance }}</td>
           <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ account.created_at }}</td>
-          <td class="py-4 px-3 pl-4 font-medium text-gray-500"><a href="{% url "account-show" account.id %}" class="text-indigo-600 hover:text-indigo-900"> Show</a></td>
-          <td class="py-4 px-3 pl-4 font-medium text-gray-500"><a href="{% url "account-edit" account.id %}" class="text-indigo-600 hover:text-indigo-900"> Edit</a></td>
-          <td class="py-4 px-3 pl-4 font-medium text-gray-500"><a href="{% url "account-delete" account.id %}" class="text-indigo-600 hover:text-indigo-900"> Delete</a></td>
+          <td class="py-4 px-3 pl-4 font-medium text-gray-500">
+            <a href="{% url "account-show" account.id %}" class="text-indigo-600 hover:text-indigo-900">Show</a>
+          </td>
+          <td class="py-4 px-3 pl-4 font-medium text-gray-500">
+            <a href="{% url "account-edit" account.id %}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
+          </td>
+          <td class="py-4 px-3 pl-4 font-medium text-gray-500">
+            <a href="{% url "account-delete" account.id %}" class="text-indigo-600 hover:text-indigo-900">Delete</a>
+          </td>
         </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}
