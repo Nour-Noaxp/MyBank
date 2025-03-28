@@ -60,7 +60,7 @@ def category_create_view(request):
             category.budget = budget
             form.save()
             messages.success(request, "Category Successfully Created!")
-            return redirect("category-show", category_id=category)
+            return redirect("category-show", category_id=category.id)
     return render(request, "category_create.html", {"form": form})
 
 
@@ -81,15 +81,11 @@ def category_edit_view(request, category_id):
         form.save()
         messages.success(request, "Category Successfully Updated!")
         return redirect("categories-list")
-    return render(
-        request,
-        "categories_list.html",
-        {"category": category, "form": form, "category_id": category.id},
-    )
+    return render(request, "category_edit.html", {"category": category, "form": form})
 
 
 def category_delete_view(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
     category.delete()
-    messages.success("Category Successfully Deleted!")
+    messages.success(request, "Category Successfully Deleted!")
     return redirect("categories-list")

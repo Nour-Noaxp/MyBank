@@ -1,0 +1,27 @@
+{% load custom_filters %}
+<form action="" method="POST" class="bg-white mx-auto m-10 p-10 py-8 border rounded-lg grid grid-cols-2 gap-y-4 max-w-2xl">
+  {% csrf_token %}
+  {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+      <p>{{ error }}</p>
+    {% endfor %}
+  {% endif %}
+  <div class="col-span-full">
+    <label for="name" class="text-md/6 font-medium text-gray-900">Name</label>
+    <div>
+      {{ form.name|add_class:"border rounded-md p-2 mt-2 outline outline-1-outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" }}
+    </div>
+  </div>
+  <div class="col-span-1">
+    <label for="activity" class="text-md/6 font-medium text-gray-900">Activity</label>
+    <div>{{ form.activity|add_class:"border rounded-md p-2 mt-2 w-52 outline outline-1-outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" }}
+    </div>
+  </div>
+  <div class="col-span-1 mb-4">
+    <label for="available" class="text-md/6 font-medium text-gray-900">Available</label>
+    <div>
+      {{ form.available|add_class:"border rounded-md p-2 mt-2 outline outline-1-outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" }}
+    </div>
+  </div>
+  <input type="submit" value="{{ button_value }}" class="border rounded-md bg-indigo-600 px-4 py-2 font-semibold text-white hover:bg-indigo-500 col-span-full justify-self-end"/>
+</form>
