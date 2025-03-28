@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1 class="font-semibold text-gray-900 text-center text-xl mt-4"> Create a new Account</h1>
+  {% include "partials/_account_form.html" with button_value="Create" %}
+  <div class="grid justify-self-end mr-20 ">
+    <a href="{% url "homepage" %}" class="border rounded-md bg-gray-600 px-4 py-2 font-semibold text-white hover:bg-gray-500 col-span-full justify-self-end">Return</a>
+  </div>
+{% endblock %}

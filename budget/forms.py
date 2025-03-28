@@ -1,14 +1,15 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Account
-from .models import Category
+from .models import Account, Category
+
 
 class AccountForm(ModelForm):
-  class Meta:
-    model = Account
-    fields = ("budget", "name", "kind", "working_balance")
+    class Meta:
+        model = Account
+        fields = ("name", "kind", "working_balance")
+
 
 class CategoryForm(ModelForm):
-  class Meta:
-    model = Category
-    fields = ("budget", "name", "activity", "available")
+    class Meta:
+        model = Category
+        fields = ("name", "activity", "available")
