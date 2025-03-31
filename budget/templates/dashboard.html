@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="flex items-center justify-between bg-green-200 border-b rounded-xl p-3 w-60 mb-3 mx-auto">
+  <div>
+    <div>{{ ready_to_assign }}€</div>
+    <p class="text-xs">Ready to Assign</p>
+  </div>
+  <a href="#">Assign</a>
+</div>
+  <table class="w-full bg-white rounded-xl overflow-hidden">
+    <thead class="border-b border-gray-300 bg-zinc-200">
+      <tr>
+        <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Category</th>
+        <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Activity</th>
+        <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Available</th>
+        <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Created At</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for category in categories %}
+      <tr class="border-b border-gray-200">
+        <td class="py-4 pr-40 pl-4 text-md/6 font-medium text-gray-900">{{ category.name }}</td>
+        <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.activity }}</td>
+        <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.available }}</td>
+        <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.created_at }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -5,8 +5,15 @@ from .forms import AccountForm
 from .forms import CategoryForm
 
 
-def homepage_view(request):
-    return render(request, "homepage.html")
+def dashboard_view(request):
+    budget = Budget.objects.first()
+    categories = Category.objects.filter(budget=budget)
+    ready_to_assign = budget.ready_to_assign
+    return render(
+        request,
+        "dashboard.html",
+        {"categories": categories, "ready_to_assign": ready_to_assign},
+    )
 
 
 def account_create_view(request):
