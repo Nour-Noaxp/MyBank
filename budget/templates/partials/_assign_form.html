@@ -1,0 +1,22 @@
+{% load custom_filters %}
+<form action="" method="POST" class="bg-white mx-auto m-10 p-10 py-8 border rounded-lg grid grid-cols-2 gap-y-4 max-w-2xl">
+  {% csrf_token %}
+  {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+      <p>{{ error }}</p>
+    {% endfor %}
+  {% endif %}
+  <div class="col-span-full">
+    <label for="amount" class="text-md/6 font-medium text-gray-900">Assign:</label>
+    <div>{{ form.amount|add_class:"border rounded-md p-2 mt-2 outline outline-1-outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" }}
+    </div>
+  </div>
+  <div class="col-span-1">
+    <label for="category" class="text-md/6 font-medium text-gray-900">To:</label>
+    <div>
+      {{ form.category|add_class:"border rounded-md p-2 mt-2 w-52 outline outline-1-outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" }}
+    </div>
+  </div>
+  <input value="Cancel" class="border rounded-md bg-indigo-100 px-4 py-2 font-semibold text-indigo-600 hover:bg-indigo-500 col-span-full justify-self-end"/>
+  <input type="submit" value="Assign" class="border rounded-md bg-indigo-600 px-4 py-2 font-semibold text-white hover:bg-indigo-500 col-span-full justify-self-end"/>
+</form>
