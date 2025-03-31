@@ -23,14 +23,14 @@ class AssignForm(ModelForm):
     )
 
     def save(self, commit=True):
-        form = form.save(commit=False)
+        form = self.save(commit=False)
         form.category = self.cleaned_data["category"]
         form.amount = self.cleaned_data["amount"]
         category = form.category
         budget = category.budget
+        category.available += form.amount
+        budget.ready_to_assign -= form.amount
         if commit:
-            category.available += form.amount
             category.save()
-            budget.ready_to_assign -= form.amount
             budget.save()
         return form

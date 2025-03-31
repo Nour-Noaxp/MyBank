@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Account, Budget, Category
-from .forms import AccountForm
-from .forms import CategoryForm
+from .forms import AccountForm, CategoryForm, AssignForm
 
 
 def dashboard_view(request):
@@ -13,6 +12,28 @@ def dashboard_view(request):
         request,
         "dashboard.html",
         {"categories": categories, "ready_to_assign": ready_to_assign},
+    )
+
+
+def budget_assign_view(request):
+    budget = Budget.objects.first()
+    categories = Category.objects.filter(budget=budget)
+    ready_to_assign = budget.ready_to_assign
+    form = AssignForm
+    if request.method == "POST":
+        form = AssignForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                "Budget Successfully Assigned to {}".format(
+                    form.cleaned_data["category"].name
+                )
+            )
+            return redirect(request, "homepage")
+    return render(
+        request,
+        "dashboard.html",
+        {"form": form, "categories": categories, "ready_to_assign": ready_to_assign},
     )
 
 
