@@ -17,20 +17,7 @@ class CategoryForm(ModelForm):
 
 class AssignForm(ModelForm):
     budget = Budget.objects.first()
-    amount = forms.IntegerField(required=True, label="Assign:")
+    amount = forms.IntegerField(required=True)
     category = forms.ModelChoiceField(
         queryset=Category.objects.filter(budget=budget), required=True
     )
-
-    def save(self, commit=True):
-        form = self.save(commit=False)
-        form.category = self.cleaned_data["category"]
-        form.amount = self.cleaned_data["amount"]
-        category = form.category
-        budget = category.budget
-        category.available += form.amount
-        budget.ready_to_assign -= form.amount
-        if commit:
-            category.save()
-            budget.save()
-        return form

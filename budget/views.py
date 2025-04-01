@@ -16,20 +16,25 @@ def dashboard_view(request):
 
 
 def budget_assign_view(request):
+    form = AssignForm
     budget = Budget.objects.first()
     categories = Category.objects.filter(budget=budget)
     ready_to_assign = budget.ready_to_assign
-    form = AssignForm
     if request.method == "POST":
         form = AssignForm(request.POST)
         if form.is_valid():
+            form.save(commit=False)
+            category = form.cleaned_data["category"]
+            amount = form.cleaned_data["amount"]
+            category.available += amount
+            budget.ready_to_assign -= amount
             form.save()
-            messages.success(
-                "Budget Successfully Assigned to {}".format(
-                    form.cleaned_data["category"].name
-                )
+            messages.success("Budget Successfully Assigned to {}".format(category.name))
+            return redirect(
+                request,
+                "homepage",
+                {"categories": categories, "ready_to_assign": budget.ready_to_assign},
             )
-            return redirect(request, "homepage")
     return render(
         request,
         "dashboard.html",
