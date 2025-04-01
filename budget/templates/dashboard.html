@@ -1,15 +1,14 @@
 {% extends "base.html" %}
+{% load static %}
 {% block content %}
   <div class="flex flex-col">
-    <div class="flex items-center justify-between bg-green-200 border-b rounded-xl p-3 w-60 mb-3 mx-auto">
+    <div class="flex items-center justify-between bg-green-200 border-b rounded-xl p-3 w-60 mb-3 mx-auto relative">
       <div>
         <div>{{ ready_to_assign }}€</div>
         <p class="text-xs">Ready to Assign</p>
       </div>
-      <div>
-        <a href="#">Assign</a>
-        <div>{% include "partials/_assign_form.html" %}</div>
-      </div>
+      <button class ="assign-btn">Assign</button>
+      {% include "partials/_assign_form.html" %}
     </div>
     <table class="w-full bg-white rounded-xl overflow-hidden">
       <thead class="border-b border-gray-300 bg-zinc-200">
@@ -32,4 +31,5 @@
       </tbody>
     </table>
   </div>
+  <script src="{% static "budget/js/assign.js" %}"></script>
 {% endblock %}
