@@ -14,3 +14,10 @@ cancelBtn.addEventListener("click", function () {
 assignBtn.addEventListener("click", function () {
   assignModalContainer.classList.add("hidden");
 });
+
+assignModalContainer.addEventListener("click", (event) => {
+  console.log(event.target);
+  if (event.target !== assignModalContainer) {
+    assignModalContainer.classList.add("hidden");
+  }
+});

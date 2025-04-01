@@ -28,13 +28,11 @@ def budget_assign_view(request):
             amount = form.cleaned_data["amount"]
             category.available += amount
             budget.ready_to_assign -= amount
+            category.save()
+            budget.save()
             form.save()
             messages.success("Budget Successfully Assigned to {}".format(category.name))
-            return redirect(
-                request,
-                "homepage",
-                {"categories": categories, "ready_to_assign": budget.ready_to_assign},
-            )
+            return redirect("dashboard")
     return render(
         request,
         "dashboard.html",
