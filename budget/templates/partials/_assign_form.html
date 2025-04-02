@@ -1,6 +1,5 @@
-{% load custom_filters %}
 {% load static %}
-<form action="" method="POST" class="assign-modal-container hidden bg-white mx-auto p-10 py-8 border rounded-lg max-w-2xl absolute top-full z-3">
+<form action="{% url "dashboard-assign" %}" method="POST" class="assign-modal-container hidden bg-white mx-auto p-10 py-8 border rounded-lg max-w-2xl absolute top-full z-3">
   {% csrf_token %}
   {% if form.non_field_errors %}
     {% for error in form.non_field_errors %}

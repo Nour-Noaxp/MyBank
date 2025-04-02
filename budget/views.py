@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Account, Budget, Category
-from .forms import AccountForm, CategoryForm, AssignForm
+from .forms import AccountForm, CategoryForm
 
 
 def dashboard_view(request):
@@ -16,28 +16,21 @@ def dashboard_view(request):
 
 
 def budget_assign_view(request):
-    form = AssignForm
     budget = Budget.objects.first()
-    categories = Category.objects.filter(budget=budget)
-    ready_to_assign = budget.ready_to_assign
     if request.method == "POST":
-        form = AssignForm(request.POST)
-        if form.is_valid():
-            form.save(commit=False)
-            category = form.cleaned_data["category"]
-            amount = form.cleaned_data["amount"]
-            category.available += amount
-            budget.ready_to_assign -= amount
-            category.save()
-            budget.save()
-            form.save()
-            messages.success("Budget Successfully Assigned to {}".format(category.name))
-            return redirect("dashboard")
-    return render(
-        request,
-        "dashboard.html",
-        {"form": form, "categories": categories, "ready_to_assign": ready_to_assign},
-    )
+        category_id = request.POST.get("category")
+        category = Category.objects.get(id=category_id)
+        amount = int(request.POST.get("amount"))
+        category.available = category.available + amount
+        budget.ready_to_assign = budget.ready_to_assign - amount
+        category.save()
+        budget.save()
+        messages.success(
+            request, "Budget Successfully Assigned to {}".format(category.name)
+        )
+        return redirect("dashboard")
+    messages.error(request, "Invalid data, please the amount and category")
+    return redirect("dashboard")
 
 
 def account_create_view(request):
@@ -48,7 +41,11 @@ def account_create_view(request):
         if form.is_valid():
             account = form.save(commit=False)
             account.budget = budget
+            budget.ready_to_assign = (
+                budget.ready_to_assign + form.cleaned_data["working_balance"]
+            )
             form.save()
+            budget.save()
             messages.success(request, "Account Successfully Created!")
             return redirect("account-show", account_id=account.id)
     return render(request, "account_create.html", {"form": form})

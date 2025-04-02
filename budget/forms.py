@@ -13,11 +13,3 @@ class CategoryForm(ModelForm):
     class Meta:
         model = Category
         fields = ("name",)
-
-
-class AssignForm(ModelForm):
-    budget = Budget.objects.first()
-    amount = forms.IntegerField(required=True)
-    category = forms.ModelChoiceField(
-        queryset=Category.objects.filter(budget=budget), required=True
-    )
