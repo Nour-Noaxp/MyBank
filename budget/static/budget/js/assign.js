@@ -1,6 +1,6 @@
-const openModalBtn = document.querySelector(".assign-btn-modal");
+const openModalBtn = document.querySelector(".open-modal-btn");
+const closeModalBtn = document.querySelector(".close-modal-btn");
 const assignModalContainer = document.querySelector(".assign-modal-container");
-const closeModalBtn = document.querySelector(".cancel-btn");
 
 openModalBtn.addEventListener("click", () => {
   assignModalContainer.classList.remove("hidden");
