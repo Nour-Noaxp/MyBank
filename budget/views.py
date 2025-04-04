@@ -41,11 +41,7 @@ def account_create_view(request):
         if form.is_valid():
             account = form.save(commit=False)
             account.budget = budget
-            budget.ready_to_assign = (
-                budget.ready_to_assign + form.cleaned_data["working_balance"]
-            )
             form.save()
-            budget.save()
             messages.success(request, "Account Successfully Created!")
             return redirect("account-show", account_id=account.id)
     return render(request, "account_create.html", {"form": form})
