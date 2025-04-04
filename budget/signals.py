@@ -6,5 +6,5 @@ from django.dispatch import receiver
 @receiver(post_save, sender=Account)
 def update_budget(sender, instance, **kwargs):
     budget = Budget.objects.first()
-    budget.ready_to_assign = budget.ready_to_assign + instance.working_balance
+    budget.ready_to_assign += instance.working_balance
     budget.save()
