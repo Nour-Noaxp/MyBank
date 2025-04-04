@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Account, Budget, Category
 from .forms import AccountForm, CategoryForm
+from .signals import update_category_and_budget
 
 
 def dashboard_view(request):
@@ -16,18 +17,11 @@ def dashboard_view(request):
 
 
 def budget_assign_view(request):
-    budget = Budget.objects.first()
     if request.method == "POST":
         category_id = request.POST.get("category")
-        category = Category.objects.get(id=category_id)
         amount = int(request.POST.get("amount"))
-        category.available = category.available + amount
-        budget.ready_to_assign = budget.ready_to_assign - amount
-        category.save()
-        budget.save()
-        messages.success(
-            request, "Budget Successfully Assigned to {}".format(category.name)
-        )
+        update_category_and_budget(category_id, amount)
+        messages.success(request, "Budget Successfully Assigned to category")
         return redirect("dashboard")
     messages.error(request, "Invalid data, please the amount and category")
     return redirect("dashboard")
