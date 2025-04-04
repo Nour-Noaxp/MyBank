@@ -3,9 +3,6 @@ from django.contrib import messages
 from .models import Account, Budget, Category
 from .forms import AccountForm, CategoryForm
 
-# from .signals import update_category_and_budget
-from .signals import budget_assign_signal
-
 
 def dashboard_view(request):
     budget = Budget.objects.first()
@@ -18,20 +15,19 @@ def dashboard_view(request):
     )
 
 
-class AssignForm:
-    def __init__(self):
-        pass
-
-
 def budget_assign_view(request):
+    budget = Budget.objects.first()
     if request.method == "POST":
         category_id = request.POST.get("category")
+        category = Category.objects.get(id=category_id)
         amount = int(request.POST.get("amount"))
-        # update_category_and_budget(category_id, amount)
-        budget_assign_signal.send(
-            sender=AssignForm, category_id=category_id, amount=amount
+        category.available = category.available + amount
+        budget.ready_to_assign = budget.ready_to_assign - amount
+        category.save()
+        budget.save()
+        messages.success(
+            request, "Budget Successfully Assigned to {}".format(category.name)
         )
-        messages.success(request, "Budget Successfully Assigned to category")
         return redirect("dashboard")
     messages.error(request, "Invalid data, please the amount and category")
     return redirect("dashboard")
