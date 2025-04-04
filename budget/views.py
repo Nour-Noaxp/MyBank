@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Account, Budget, Category
+from .models import Account, Budget, Category, Transaction
 from .forms import AccountForm, CategoryForm
 
 
@@ -49,7 +49,10 @@ def account_create_view(request):
 
 def account_show_view(request, account_id):
     account = get_object_or_404(Account, pk=account_id)
-    return render(request, "account_show.html", {"account": account})
+    transactions = Transaction.objects.filter(account=account)
+    return render(
+        request, "account_show.html", {"account": account, "transactions": transactions}
+    )
 
 
 def accounts_list_view(request):
