@@ -1,5 +1,6 @@
+from django import forms
 from django.forms import ModelForm
-from .models import Account, Category
+from .models import Budget, Account, Category
 
 
 class AccountForm(ModelForm):
