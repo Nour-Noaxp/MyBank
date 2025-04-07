@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Account, Budget, Category, Transaction
 from .forms import AccountForm, CategoryForm
+from django.http import JSONResponse
 
 
 def dashboard_view(request):
@@ -84,13 +85,16 @@ def account_delete_view(request, account_id):
 def transaction_create_view(request, account_id):
     account = get_object_or_404(Account, pk=account_id)
     if request.method == "POST":
-        category_id = request.post.get("category_id")
+        data = request.body
+        data = json.loads(data)
+
+        category_id = data["category_id"]
         category = Category.objects.get(id=category_id)
-        date = request.post.get("created_at")
-        payee = request.post.get("payee")
-        memo = request.post.get("memo")
-        outflow = request.post.get("outflow")
-        inflow = request.post.get("inflow")
+        date = data["created_at"]
+        payee = data["payee"]
+        memo = data["memo"]
+        outflow = data["outflow"]
+        inflow = data["inflow"]
 
         transaction = Transaction(
             created_at=date,
@@ -101,9 +105,11 @@ def transaction_create_view(request, account_id):
             inflow=inflow,
         )
         transaction.save()
-        return redirect("account-show", {"account_id": account_id})
+        return JsonResponse({"message": "Successs"})
+        # return redirect("account-show", {"account_id": account_id})
     messages.error(request, "Invalid data, please verify the submitted informations")
-    return redirect("account-show")
+    return JsonResponse({"error": "Bad request"}, status=400)
+    # return redirect("account-show")
 
 
 def category_create_view(request):
