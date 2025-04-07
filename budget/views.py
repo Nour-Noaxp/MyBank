@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Account, Budget, Category, Transaction
 from .forms import AccountForm, CategoryForm
-from django.http import JSONResponse
 
 
 def dashboard_view(request):
@@ -85,19 +84,18 @@ def account_delete_view(request, account_id):
 def transaction_create_view(request, account_id):
     account = get_object_or_404(Account, pk=account_id)
     if request.method == "POST":
-        data = request.body
-        data = json.loads(data)
-
-        category_id = data["category_id"]
+        print("INSIDE POST REQUEST")
+        print(request.POST)
+        category_id = request.POST.get("category")
         category = Category.objects.get(id=category_id)
-        date = data["created_at"]
-        payee = data["payee"]
-        memo = data["memo"]
-        outflow = data["outflow"]
-        inflow = data["inflow"]
-
+        date = request.POST.get("date")
+        payee = request.POST.get("payee")
+        memo = request.POST.get("memo")
+        outflow = request.POST.get("outflow")
+        inflow = request.POST.get("inflow")
         transaction = Transaction(
-            created_at=date,
+            account=account,
+            date=date,
             payee=payee,
             category=category,
             memo=memo,
@@ -105,11 +103,10 @@ def transaction_create_view(request, account_id):
             inflow=inflow,
         )
         transaction.save()
-        return JsonResponse({"message": "Successs"})
-        # return redirect("account-show", {"account_id": account_id})
+        messages.success(request, "Transaction Successfully Created")
+        return redirect("account-show", account_id=account_id)
     messages.error(request, "Invalid data, please verify the submitted informations")
-    return JsonResponse({"error": "Bad request"}, status=400)
-    # return redirect("account-show")
+    return redirect("account-show", account_id=account_id)
 
 
 def category_create_view(request):

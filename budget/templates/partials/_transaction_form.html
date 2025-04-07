@@ -6,31 +6,31 @@
     <div class="flex pt-2">
       <div class="flex flex-col mr-44">
         <label for="date" class="font-medium text-gray-900 pb-2">Date</label>
-        <input name="created_at" class="w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
+        <input name="date" type="datetime-local" class="w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
       </div>
       <div class="flex flex-col">
         <label for="payee" class="font-medium text-gray-900 pb-2">Payee</label>
-        <input name="payee" class="w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
+        <input name="payee" type="text" class="w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
       </div>
       <div class="flex flex-col mr-16">
         <label for="category" class="font-medium text-gray-900 pb-2">Category</label>
         <select name="category" class="border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
           {% for category in categories %}
-          <option value="{{ category.id }}" > {{ category }}</option>
+          <option value="{{ category.id }}"> {{ category }}</option>
           {% endfor %}
         </select>
       </div>
       <div class="flex flex-col">
         <label for="memo" class="font-medium text-gray-900 pb-2">Memo</label>
-        <input class="w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
+        <input name="memo" type="text" class="w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
       </div>
       <div class="flex flex-col">
         <label for="outflow" class="font-medium text-gray-900 pb-2">Outflow</label>
-        <input class="w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
+        <input name="outflow" type="number" class="w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
       </div>
       <div class="flex flex-col">
         <label for="inflow" class="font-medium text-gray-900 pb-2">Inflow</label>
-        <input class="w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
+        <input name="inflow" type="number" class="w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
       </div>
     </div>
     <div class="flex flex-row justify-end mt-5 space-x-2 mr-10">
