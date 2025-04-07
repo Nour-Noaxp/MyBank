@@ -29,7 +29,7 @@ def budget_assign_view(request):
             request, "Budget Successfully Assigned to {}".format(category.name)
         )
         return redirect("dashboard")
-    messages.error(request, "Invalid data, please the amount and category")
+    messages.error(request, "Invalid data, please verify the amount and category")
     return redirect("dashboard")
 
 
@@ -48,10 +48,14 @@ def account_create_view(request):
 
 
 def account_show_view(request, account_id):
+    budget = Budget.objects.first()
     account = get_object_or_404(Account, pk=account_id)
     transactions = Transaction.objects.filter(account=account)
+    categories = Category.objects.filter(budget=budget)
     return render(
-        request, "account_show.html", {"account": account, "transactions": transactions}
+        request,
+        "account_show.html",
+        {"account": account, "transactions": transactions, "categories": categories},
     )
 
 
@@ -75,6 +79,31 @@ def account_delete_view(request, account_id):
     account.delete()
     messages.success(request, "Account Successfully Deleted!")
     return redirect("accounts-list")
+
+
+def transaction_create_view(request, account_id):
+    account = get_object_or_404(Account, pk=account_id)
+    if request.method == "POST":
+        category_id = request.post.get("category_id")
+        category = Category.objects.get(id=category_id)
+        date = request.post.get("created_at")
+        payee = request.post.get("payee")
+        memo = request.post.get("memo")
+        outflow = request.post.get("outflow")
+        inflow = request.post.get("inflow")
+
+        transaction = Transaction(
+            created_at=date,
+            payee=payee,
+            category=category,
+            memo=memo,
+            outflow=outflow,
+            inflow=inflow,
+        )
+        transaction.save()
+        return redirect("account-show", {"account_id": account_id})
+    messages.error(request, "Invalid data, please verify the submitted informations")
+    return redirect("account-show")
 
 
 def category_create_view(request):

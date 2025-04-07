@@ -20,6 +20,38 @@
 </div>
 
   <h2 class="font-bold text-gray-900 text-center text-xl my-4">{{ account.name }}</h2>
+  <form action="{% url "transaction-create" %}?param={{ account_id }}" method="POST">
+    {% csrf_token %}
+    <div>
+      <label for="date">Date</label>
+      <input name="created_at"></input>
+    </div>
+    <div>
+      <label for="payee">Payee</label>
+      <input name="payee"></input>
+    </div>
+
+    <div>
+      <label for="category">Category</label>
+      <select name="category">
+        {% for category in categories %}
+        <option value="{{ category.id }}"> {{ category }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="memo">Memo</label>
+      <input></input>
+    </div>
+    <div>
+      <label for="outflow">Outflow</label>
+      <input></input>
+    </div>
+    <div>
+      <label for="inflow">Inflow</label>
+      <input></input>
+    </div>
+  </form>
   <table class="w-full bg-white rounded-xl overflow-hidden">
     <thead class="border-b border-gray-300 bg-zinc-200">
       <tr>
