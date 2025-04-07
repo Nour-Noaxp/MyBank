@@ -20,7 +20,7 @@
 </div>
 
   <h2 class="font-bold text-gray-900 text-center text-xl my-4">{{ account.name }}</h2>
-  <form action="{% url "transaction-create" %}?param={{ account_id }}" method="POST">
+  <form action="{% url "transaction-create" account_id=account.id %}" method="POST">
     {% csrf_token %}
     <div>
       <label for="date">Date</label>
