@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Account, Budget, Category, Transaction
 from .forms import AccountForm, CategoryForm
+from django.http import JsonResponse
+import json
 
 
 def dashboard_view(request):
@@ -85,28 +87,33 @@ def transaction_create_view(request, account_id):
     account = get_object_or_404(Account, pk=account_id)
     if request.method == "POST":
         print("INSIDE POST REQUEST")
-        print(request.POST)
-        category_id = request.POST.get("category")
-        category = Category.objects.get(id=category_id)
-        date = request.POST.get("date")
-        payee = request.POST.get("payee")
-        memo = request.POST.get("memo")
-        outflow = request.POST.get("outflow")
-        inflow = request.POST.get("inflow")
-        transaction = Transaction(
-            account=account,
-            date=date,
-            payee=payee,
-            category=category,
-            memo=memo,
-            outflow=outflow,
-            inflow=inflow,
-        )
-        transaction.save()
-        messages.success(request, "Transaction Successfully Created")
-        return redirect("account-show", account_id=account_id)
-    messages.error(request, "Invalid data, please verify the submitted informations")
-    return redirect("account-show", account_id=account_id)
+        data = json.loads(request.body)
+        print(data)
+        return JsonResponse({"success": True})
+    return JsonResponse(
+        {"success": False, "error": "Error while receiving data in transaction view"}
+    )
+    # category_id = request.POST.get("category")
+    # category = Category.objects.get(id=category_id)
+    # date = request.POST.get("date")
+    # payee = request.POST.get("payee")
+    # memo = request.POST.get("memo")
+    # outflow = request.POST.get("outflow")
+    # inflow = request.POST.get("inflow")
+    # transaction = Transaction(
+    #     account=account,
+    #     date=date,
+    #     payee=payee,
+    #     category=category,
+    #     memo=memo,
+    #     outflow=outflow,
+    #     inflow=inflow,
+    # )
+    # transaction.save()
+    #     messages.success(request, "Transaction Successfully Created")
+    #     return redirect("account-show", account_id=account_id)
+    # messages.error(request, "Invalid data, please verify the submitted informations")
+    # return redirect("account-show", account_id=account_id)
 
 
 def category_create_view(request):

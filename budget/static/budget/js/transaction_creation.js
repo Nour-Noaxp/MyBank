@@ -24,6 +24,7 @@ transactionForm.addEventListener("submit", function (event) {
   };
   console.log("raw data", data);
   console.log("stringified data", JSON.stringify(data));
+  console.log(`accounts/${accountId}/transactions/new`);
 
   fetch(`accounts/${accountId}/transactions/new`, {
     method: "POST",
@@ -35,6 +36,10 @@ transactionForm.addEventListener("submit", function (event) {
   }).then((response) => {
     console.log("first response global", response);
     console.log("first response json encoded data", response.json());
+    if (!response.ok) {
+      throw new Error("Request Error!!!!!!");
+    }
+    return response.json();
   });
 });
 
