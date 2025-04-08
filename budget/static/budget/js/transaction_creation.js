@@ -26,7 +26,7 @@ transactionForm.addEventListener("submit", function (event) {
   console.log("stringified data", JSON.stringify(data));
   console.log(`accounts/${accountId}/transactions/new`);
 
-  fetch(`accounts/${accountId}/transactions/new`, {
+  fetch(`/accounts/${accountId}/transactions/new`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -39,7 +39,7 @@ transactionForm.addEventListener("submit", function (event) {
     if (!response.ok) {
       throw new Error("Request Error!!!!!!");
     }
-    return response.json();
+    return response;
   });
 });
 

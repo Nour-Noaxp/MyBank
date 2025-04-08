@@ -89,31 +89,21 @@ def transaction_create_view(request, account_id):
         print("INSIDE POST REQUEST")
         data = json.loads(request.body)
         print(data)
+        transaction = Transaction(
+            account=account,
+            date=data["date"],
+            payee=data["payee"],
+            category=Category.objects.get(id=data["category"]),
+            memo=data["memo"],
+            outflow=data["outflow"],
+            inflow=data["inflow"],
+        )
+        transaction.save()
+        print("Transaction new object : ", transaction)
         return JsonResponse({"success": True})
     return JsonResponse(
         {"success": False, "error": "Error while receiving data in transaction view"}
     )
-    # category_id = request.POST.get("category")
-    # category = Category.objects.get(id=category_id)
-    # date = request.POST.get("date")
-    # payee = request.POST.get("payee")
-    # memo = request.POST.get("memo")
-    # outflow = request.POST.get("outflow")
-    # inflow = request.POST.get("inflow")
-    # transaction = Transaction(
-    #     account=account,
-    #     date=date,
-    #     payee=payee,
-    #     category=category,
-    #     memo=memo,
-    #     outflow=outflow,
-    #     inflow=inflow,
-    # )
-    # transaction.save()
-    #     messages.success(request, "Transaction Successfully Created")
-    #     return redirect("account-show", account_id=account_id)
-    # messages.error(request, "Invalid data, please verify the submitted informations")
-    # return redirect("account-show", account_id=account_id)
 
 
 def category_create_view(request):
