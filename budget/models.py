@@ -51,8 +51,8 @@ class Transaction(models.Model):
     date = models.DateTimeField(blank=False, null=False)
     payee = models.CharField(max_length=50, blank=False, null=False)
     memo = models.CharField(max_length=100, blank=True, null=True)
-    outflow = models.IntegerField(default=0, blank=True, null=True)
-    inflow = models.IntegerField(default=0, blank=True, null=True)
+    outflow = models.IntegerField(default=0)
+    inflow = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
