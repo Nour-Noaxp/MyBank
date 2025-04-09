@@ -12,7 +12,7 @@ cancelBtn.addEventListener("click", () => {
   transactionForm.classList.add("hidden");
 });
 
-transactionForm.addEventListener("submit", function (event) {
+transactionForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const data = {
     date: document.querySelector(".date-input").value,
@@ -33,12 +33,31 @@ transactionForm.addEventListener("submit", function (event) {
       "X-CSRFToken": csrfToken,
     },
     body: JSON.stringify(data),
-  }).then((response) => {
-    console.log("first response global", response);
-    console.log("first response json encoded data", response.json());
-    if (!response.ok) {
-      throw new Error("Request Error!!!!!!");
-    }
-    return response.json();
-  });
+  })
+    .then((response) => {
+      console.log("first response global", response);
+      if (!response.ok) {
+        throw new Error("Request Error!!!!!!");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // console.log("promise response in json", json);
+      console.log("promise data", data);
+
+      const transactionRow = document.querySelector(".transaction-row ");
+      if (data.success) {
+        transactionRow.innerHTML = `
+      <td class="py-4 px-3 pl-4 font-medium text-gray-900">${data.date}</td>
+      <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.payee}</td>
+      <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.category}</td>
+      <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.memo}</td>
+      <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.outflow}</td>
+      <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.inflow}</td>`;
+      }
+      transactionForm.classList.add("hidden");
+    })
+    .catch((error) => {
+      console.log("Promise Error!!!!! :", error);
+    });
 });
