@@ -57,4 +57,4 @@ class Transaction(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Transaction : {self.date.strftime("%d/%m/%Y, %H:%M:%S")}"
+        return f"Transaction {self.date.strftime('%d/%m/%Y, %H:%M:%S')}"

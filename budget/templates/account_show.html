@@ -34,8 +34,8 @@
     </thead>
     <tbody>
       {% for transaction in transactions %}
-      <tr class="border-b border-gray-200">
-        <td class="py-4 px-3 pl-4 font-medium text-gray-900">{{ transaction.created_at }}</td>
+      <tr class="transaction-row border-b border-gray-200">
+        <td class="py-4 px-3 pl-4 font-medium text-gray-900">{{ transaction.date }}</td>
         <td class="py-4 px-3 pl-4 font-medium text-gray-500">{{ transaction.payee }}</td>
         <td class="py-4 px-3 pl-4 font-medium text-gray-500">{{ transaction.category }}</td>
         <td class="py-4 px-3 pl-4 font-medium text-gray-500">{{ transaction.memo }}</td>

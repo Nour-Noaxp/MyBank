@@ -4,6 +4,7 @@ from .models import Account, Budget, Category, Transaction
 from .forms import AccountForm, CategoryForm
 from django.http import JsonResponse
 import json
+from datetime import datetime
 
 
 def dashboard_view(request):
@@ -89,18 +90,31 @@ def transaction_create_view(request, account_id):
         print("INSIDE POST REQUEST")
         data = json.loads(request.body)
         print(data)
+        category = Category.objects.get(id=int(data["category"]))
         transaction = Transaction(
             account=account,
-            date=data["date"],
+            date=datetime.strptime(data["date"], "%Y-%m-%dT%H:%M"),
             payee=data["payee"],
-            category=Category.objects.get(id=data["category"]),
+            category=category,
             memo=data["memo"],
-            outflow=data["outflow"],
-            inflow=data["inflow"],
+            outflow=int(data["outflow"]),
+            inflow=int(data["inflow"]),
         )
         transaction.save()
-        print("Transaction new object : ", transaction)
-        return JsonResponse({"success": True})
+        print("Transaction new object : ", transaction.__dict__)
+        return JsonResponse(
+            {
+                "success": True,
+                "id": transaction.id,
+                "account_id": transaction.account.id,
+                "category": str(transaction.category),
+                "date": transaction.date.isoformat(),
+                "payee": transaction.payee,
+                "memo": transaction.memo,
+                "outflow": transaction.outflow,
+                "inflow": transaction.inflow,
+            }
+        )
     return JsonResponse(
         {"success": False, "error": "Error while receiving data in transaction view"}
     )

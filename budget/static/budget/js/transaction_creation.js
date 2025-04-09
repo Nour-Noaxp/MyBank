@@ -39,12 +39,6 @@ transactionForm.addEventListener("submit", function (event) {
     if (!response.ok) {
       throw new Error("Request Error!!!!!!");
     }
-    return response;
+    return response.json();
   });
 });
-
-// const categoryId =
-//   document.querySelector(".category-option").dataset.categoryId;
-// saveBtn.addEventListener("click", (event) => {
-//   event.preventDefault();
-// });
