@@ -4,7 +4,7 @@ from .models import Account, Budget, Category, Transaction
 from .forms import AccountForm, CategoryForm
 from django.http import JsonResponse
 import json
-from datetime import datetime
+from django.utils import timezone
 
 
 def dashboard_view(request):
@@ -88,33 +88,34 @@ def transaction_create_view(request, account_id):
     account = get_object_or_404(Account, pk=account_id)
     if request.method == "POST":
         print("INSIDE POST REQUEST")
-        data = json.loads(request.body)
-        print(data)
-        category = Category.objects.get(id=int(data["category"]))
+        fetch_data = json.loads(request.body)
+        print("fetch get data category: ", fetch_data.get("category") or 0)
+        print("fetch gey data outflow: ", fetch_data.get("outflow") or 0)
+        print("fetch get data date: ", fetch_data.get(("date") or timezone.now()))
+        category = Category.objects.get(id=int(fetch_data.get("category") or 0))
         transaction = Transaction(
             account=account,
-            date=datetime.strptime(data["date"], "%Y-%m-%dT%H:%M"),
-            payee=data["payee"],
+            date=fetch_data.get(("date") or timezone.now()),
+            payee=fetch_data.get("payee"),
             category=category,
-            memo=data["memo"],
-            outflow=int(data["outflow"]),
-            inflow=int(data["inflow"]),
+            memo=fetch_data.get("memo"),
+            outflow=(fetch_data.get("outflow") or 0),
+            inflow=(fetch_data.get("inflow") or 0),
         )
         transaction.save()
         print("Transaction new object : ", transaction.__dict__)
-        return JsonResponse(
-            {
-                "success": True,
-                "id": transaction.id,
-                "account_id": transaction.account.id,
-                "category": str(transaction.category),
-                "date": transaction.date.isoformat(),
-                "payee": transaction.payee,
-                "memo": transaction.memo,
-                "outflow": transaction.outflow,
-                "inflow": transaction.inflow,
-            }
-        )
+        data = {
+            "success": True,
+            "id": transaction.id,
+            "account_id": transaction.account.id,
+            "category": str(transaction.category),
+            "date": transaction.date,
+            "payee": transaction.payee,
+            "memo": transaction.memo,
+            "outflow": transaction.outflow,
+            "inflow": transaction.inflow,
+        }
+        return JsonResponse(data)
     return JsonResponse(
         {"success": False, "error": "Error while receiving data in transaction view"}
     )
