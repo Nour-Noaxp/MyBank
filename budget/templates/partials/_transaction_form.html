@@ -14,10 +14,10 @@
       </div>
       <div class="flex flex-col">
         <label for="category" class="font-medium text-gray-900 pb-2">Category</label>
-        <select name="category" class="border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
+        <select name="category" class="category-input border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
           <option value=""></option>
           {% for category in categories %}
-            <option class="category-input" value="{{ category.id }}" data-category-id="{{ category.id }}"> {{ category }}</option>
+            <option value="{{ category.id }}" data-category-id="{{ category.id }}"> {{ category }}</option>
           {% endfor %}
         </select>
       </div>
