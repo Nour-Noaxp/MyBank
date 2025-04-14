@@ -87,7 +87,11 @@ def account_delete_view(request, account_id):
 def transaction_create_view(request, account_id):
     account = get_object_or_404(Account, pk=account_id)
     if request.method == "POST":
+        print("INSIDE POST REQUEST")
         fetch_data = json.loads(request.body)
+        print("fetch get data category: ", fetch_data.get("category") or 0)
+        print("fetch gey data outflow: ", fetch_data.get("outflow") or 0)
+        print("fetch get data date: ", fetch_data.get(("date") or timezone.now()))
         category_id = fetch_data.get("category")
         payee = fetch_data.get("payee")
 
