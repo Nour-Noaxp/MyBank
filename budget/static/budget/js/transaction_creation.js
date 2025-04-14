@@ -44,8 +44,10 @@ transactionForm.addEventListener("submit", (event) => {
     .then((data) => {
       console.log("promise data", data);
 
-      const transactionRow = document.querySelector(".transaction-row ");
+      const tableBody = document.querySelector(".table-body");
       if (data.success) {
+        const transactionRow = tableBody.insertRow(0);
+        transactionRow.classList.add("border-b", "border-gray-200");
         transactionRow.innerHTML = `
       <td class="py-4 px-3 pl-4 font-medium text-gray-900">${data.date}</td>
       <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.payee}</td>
@@ -55,6 +57,7 @@ transactionForm.addEventListener("submit", (event) => {
       <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.inflow}</td>`;
       }
       transactionForm.classList.add("hidden");
+      transactionForm.reset();
     })
     .catch((error) => {
       console.log("Promise Error!!!!! :", error);

@@ -3,35 +3,35 @@
 <div data-account-id="{{ account.id }}" data-csrf-token="{{ csrf_token }}" class="transaction-form hidden bg-indigo-100 p-2 px-4 mb-1 ">
   <form action="{% url "transaction-create" account_id=account.id %}" method="POST">
     {% csrf_token %}
-    <div class="flex gap-2 pt-2">
-      <div class="flex flex-col">
+    <div class="flex pt-2">
+      <div class="flex flex-col w-full">
         <label for="date" class="font-medium text-gray-900 pb-2">Date</label>
-        <input name="date" type="datetime-local" class="date-input w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
+        <input name="date" type="datetime-local" class="date-input w-4/5 px-1 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required oninvalid="setCustomValidity('Please provide the transaction date')" oninput="setCustomValidity('')"></input>
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-col w-full">
         <label for="payee" class="font-medium text-gray-900 pb-2">Payee</label>
-        <input name="payee" type="text" class="payee-input w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
+        <input name="payee" type="text" class="payee-input w-4/5 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600" required oninvalid="setCustomValidity('Payee can\'t be empty')" oninput=''></input>
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-col w-full">
         <label for="category" class="font-medium text-gray-900 pb-2">Category</label>
-        <select name="category" class="category-input border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
+        <select name="category" class="category-input w-4/5 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600">
           <option value=""></option>
           {% for category in categories %}
             <option value="{{ category.id }}" data-category-id="{{ category.id }}"> {{ category }}</option>
           {% endfor %}
         </select>
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-col w-full">
         <label for="memo" class="font-medium text-gray-900 pb-2">Memo</label>
-        <input name="memo" type="text" class="memo-input w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
+        <input name="memo" type="text" class="memo-input w-4/5 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-col w-full">
         <label for="outflow" class="font-medium text-gray-900 pb-2">Outflow</label>
-        <input name="outflow" type="number" class="outflow-input w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
+        <input name="outflow" type="number" class="outflow-input w-4/5 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
       </div>
-      <div class="flex flex-col">
+      <div class="flex flex-col w-full">
         <label for="inflow" class="font-medium text-gray-900 pb-2">Inflow</label>
-        <input name="inflow" type="number" class="inflow-input w-2/3 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
+        <input name="inflow" type="number" class="inflow-input w-4/5 border rounded-md outline outline-1 outline-indigo-600 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"></input>
       </div>
     </div>
     <div class="flex flex-row justify-end mt-5 space-x-2">

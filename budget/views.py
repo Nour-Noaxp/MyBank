@@ -93,15 +93,22 @@ def transaction_create_view(request, account_id):
         print("fetch gey data outflow: ", fetch_data.get("outflow") or 0)
         print("fetch get data date: ", fetch_data.get(("date") or timezone.now()))
         category_id = fetch_data.get("category")
+        payee = fetch_data.get("payee")
+
         if category_id:
             category = Category.objects.get(id=category_id)
         else:
             category = None
 
+        if not payee:
+            return JsonResponse(
+                {"success": False, "error": "Payee can't be empty"}, status=400
+            )
+
         transaction = Transaction(
             account=account,
-            date=fetch_data.get(("date") or timezone.now()),
-            payee=fetch_data.get("payee"),
+            date=fetch_data.get("date") or timezone.now(),
+            payee=payee,
             category=category,
             memo=fetch_data.get("memo"),
             outflow=(fetch_data.get("outflow") or 0),
