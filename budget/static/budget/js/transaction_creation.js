@@ -57,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
         <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.outflow}</td>
         <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.inflow}</td>`;
         }
-        formContainer.classList.add("hidden");
         transactionForm.reset();
       })
       .catch((error) => {
