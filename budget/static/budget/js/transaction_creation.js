@@ -35,7 +35,6 @@ transactionForm.addEventListener("submit", (event) => {
     body: JSON.stringify(data),
   })
     .then((response) => {
-      // console.log("first response global", response);
       if (!response.ok) {
         throw new Error("Request Error!!!!!!");
       }
