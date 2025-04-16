@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveBtn = document.querySelector(".save-Btn");
   const accountId = transactionForm.dataset.accountId;
   const csrfToken = transactionForm.dataset.csrfToken;
+  const errorMsgContainer = document.querySelector(".error-message-container");
 
   addTransactionBtn.addEventListener("click", () => {
     formContainer.classList.remove("hidden");
@@ -17,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   transactionForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const data = {
-      date: document.querySelector(".date-input").value.toLocaleString(),
+      date: document.querySelector(".date-input").value,
       payee: document.querySelector(".payee-input").value,
       category: document.querySelector(".category-input").value,
       memo: document.querySelector(".memo-input").value,
@@ -44,20 +45,26 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .then((data) => {
         console.log("promise data", data);
-
-        const tableBody = document.querySelector(".table-body");
-        if (data.success) {
+        if (!data.status) {
+          errorMsgContainer.innerHTML = `<div>${data.message}</div>`;
+          errorMsgContainer.classList.remove("hidden");
+          console.log("data error message : ", data.message);
+        } else {
+          const tableBody = document.querySelector(".table-body");
+          const date = new Date(data.date);
+          const formatted_date = date.toLocaleString("fr-FR");
           const transactionRow = tableBody.insertRow(0);
           transactionRow.classList.add("border-b", "border-gray-200");
           transactionRow.innerHTML = `
-        <td class="py-4 px-3 pl-4 font-medium text-gray-900">${data.date}</td>
+        <td class="py-4 px-3 pl-4 font-medium text-gray-900">${formatted_date}</td>
         <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.payee}</td>
         <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.category}</td>
         <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.memo}</td>
         <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.outflow}</td>
         <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.inflow}</td>`;
+          transactionForm.reset();
+          errorMsgContainer.classList.add("hidden");
         }
-        transactionForm.reset();
       })
       .catch((error) => {
         console.log("Promise Error!!!!! :", error);

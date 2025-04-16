@@ -5,6 +5,7 @@ from .forms import AccountForm, CategoryForm
 from django.http import JsonResponse
 import json
 from django.utils import timezone
+from datetime import datetime
 
 
 def dashboard_view(request):
@@ -90,34 +91,60 @@ def transaction_create_view(request, account_id):
         print("INSIDE POST REQUEST")
         fetch_data = json.loads(request.body)
         print("fetch get data category: ", fetch_data.get("category") or 0)
-        print("fetch gey data outflow: ", fetch_data.get("outflow") or 0)
+        print("fetch get data outflow: ", fetch_data.get("outflow") or 0)
         print("fetch get data date: ", fetch_data.get(("date") or timezone.now()))
-        category_id = fetch_data.get("category")
+        date = fetch_data.get("date")
         payee = fetch_data.get("payee")
+        category_id = fetch_data.get("category")
+        memo = fetch_data.get("memo")
+        outflow = outflow = fetch_data.get("outflow") or 0
+        inflow = inflow = fetch_data.get("inflow") or 0
+
+        if not date:
+            return JsonResponse({"status": False, "message": "Date value is missing"})
+        if not payee:
+            return JsonResponse({"status": False, "message": "Payee value is missing"})
 
         if category_id:
             category = Category.objects.get(id=category_id)
         else:
             category = None
 
+        if int(outflow) > 0 and not category:
+            return JsonResponse(
+                {
+                    "status": False,
+                    "message": "You need to provide a category for the outflow",
+                }
+            )
+
+        if int(outflow) == 0 and int(inflow) == 0:
+            return JsonResponse(
+                {
+                    "status": False,
+                    "message": "You need to provide either an outflow or an inflow value",
+                }
+            )
+
         if not payee:
             return JsonResponse(
-                {"success": False, "error": "Payee can't be empty"}, status=400
+                {"status": False, "message": "Payee can't be empty"}, status=400
             )
 
         transaction = Transaction(
             account=account,
-            date=fetch_data.get("date") or timezone.now(),
+            date=date,
             payee=payee,
             category=category,
-            memo=fetch_data.get("memo"),
-            outflow=(fetch_data.get("outflow") or 0),
-            inflow=(fetch_data.get("inflow") or 0),
+            memo=memo,
+            outflow=outflow,
+            inflow=inflow,
         )
+        print("inflow value type", type(transaction.inflow))
         transaction.save()
         print("Transaction new object : ", transaction.__dict__)
         data = {
-            "success": True,
+            "status": True,
             "id": transaction.id,
             "account_id": transaction.account.id,
             "category": str(transaction.category),
@@ -129,7 +156,7 @@ def transaction_create_view(request, account_id):
         }
         return JsonResponse(data)
     return JsonResponse(
-        {"success": False, "error": "Error while receiving data in transaction view"}
+        {"status": False, "message": "Error while receiving data in transaction view"}
     )
 
 
