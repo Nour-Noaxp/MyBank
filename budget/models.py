@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class Budget(models.Model):
@@ -58,3 +59,11 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f"Transaction {self.date.strftime('%d/%m/%Y, %H:%M:%S')}"
+
+    def clean(self):
+        if self.category and not self.outflow:
+            raise ValidationError("You need to provide an outflow for the category")
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)

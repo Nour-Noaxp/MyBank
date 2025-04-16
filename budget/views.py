@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.http import JsonResponse
+from django.forms.models import model_to_dict
 from .models import Account, Budget, Category, Transaction
 from .forms import AccountForm, CategoryForm
-from django.http import JsonResponse
 import json
 
 
@@ -86,83 +88,30 @@ def account_delete_view(request, account_id):
 def transaction_create_view(request, account_id):
     account = get_object_or_404(Account, pk=account_id)
     if request.method == "POST":
-        print("INSIDE POST REQUEST")
-        fetch_data = json.loads(request.body)
-        print("fetch get data category: ", fetch_data.get("category") or 0)
-        print("fetch get data outflow: ", fetch_data.get("outflow") or 0)
-        print("fetch get data date: ", fetch_data.get("date"))
+        try:
+            fetch_data = json.loads(request.body)
 
-        date = fetch_data.get("date")
-        payee = fetch_data.get("payee")
-        category_id = fetch_data.get("category")
-        memo = fetch_data.get("memo")
-        outflow = fetch_data.get("outflow") or 0
-        inflow = fetch_data.get("inflow") or 0
-
-        if not date:
-            return JsonResponse(
-                {"success": False, "message": "Date value is missing"}, status=400
+            transaction = Transaction(
+                account=account,
+                date=fetch_data.get("date"),
+                payee=fetch_data.get("payee"),
+                category_id=fetch_data.get("category") or None,
+                memo=fetch_data.get("memo"),
+                outflow=fetch_data.get("outflow") or 0,
+                inflow=fetch_data.get("inflow") or 0,
             )
-        if not payee:
+            transaction.save()
+            data = {"success": True, "transaction": model_to_dict(transaction)}
+            data["transaction"]["category"] = str(transaction.category)
+            return JsonResponse(data)
+
+        except ValidationError as ve:
             return JsonResponse(
-                {"success": False, "message": "Payee value is missing"}, status=400
+                {"success": False, "errors": ve.message_dict},
             )
-
-        if category_id:
-            category = Category.objects.get(id=category_id)
-        else:
-            category = None
-
-        if int(outflow) > 0 and not category:
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": "You need to provide a category for the outflow",
-                },
-                status=400,
-            )
-
-        if int(outflow) == 0 and int(inflow) == 0:
-            return JsonResponse(
-                {
-                    "success": False,
-                    "message": "You need to provide either an outflow or an inflow value",
-                },
-                status=400,
-            )
-
-        if not payee:
-            return JsonResponse(
-                {"success": False, "message": "Payee can't be empty"}, status=400
-            )
-
-        transaction = Transaction(
-            account=account,
-            date=date,
-            payee=payee,
-            category=category,
-            memo=memo,
-            outflow=outflow,
-            inflow=inflow,
-        )
-        print("inflow value type", type(transaction.inflow))
-        transaction.save()
-        print("Transaction new object : ", transaction.__dict__)
-        data = {
-            "success": True,
-            "id": transaction.id,
-            "account_id": transaction.account.id,
-            "category": str(transaction.category),
-            "date": transaction.date,
-            "payee": transaction.payee,
-            "memo": transaction.memo,
-            "outflow": transaction.outflow,
-            "inflow": transaction.inflow,
-        }
-        return JsonResponse(data)
     return JsonResponse(
         {"success": False, "message": "Error while receiving data in transaction view"},
-        status=500,
+        status=400,
     )
 
 
