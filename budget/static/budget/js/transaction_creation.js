@@ -49,22 +49,28 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => {
         console.log("response data : ", data);
         if (!data.success) {
-          errorMsgContainer.innerHTML = `<div>${data.message}</div>`;
+          errorMsgContainer.innerHTML = `<div>${data["errors"]["__all__"]}</div>`;
+          Object.entries(data["errors"]).forEach(([key, value]) => {
+            const errorDiv = document.createElement("div");
+            errorDiv.textContent = `${key}: ${value}`;
+            errorMsgContainer.appendChild(errorDiv);
+            // errorMsgContainer.appendChild(`<div>${`${key}: ${value}`}</div>`);
+          });
           errorMsgContainer.classList.remove("hidden");
-          console.log("data error message : ", data.message);
+          console.log("data error message : ", data["errors"]);
         } else {
           const tableBody = document.querySelector(".table-body");
-          const date = new Date(data.date);
+          const date = new Date(data["transaction"]["date"]);
           const formatted_date = date.toLocaleString("fr-FR");
           const transactionRow = tableBody.insertRow(0);
           transactionRow.classList.add("border-b", "border-gray-200");
           transactionRow.innerHTML = `
         <td class="py-4 px-3 pl-4 font-medium text-gray-900">${formatted_date}</td>
-        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.payee}</td>
-        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.category}</td>
-        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.memo}</td>
-        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.outflow}</td>
-        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.inflow}</td>`;
+        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["payee"]}</td>
+        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["category"]}</td>
+        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["memo"]}</td>
+        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["outflow"]}</td>
+        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["inflow"]}</td>`;
           transactionForm.reset();
           errorMsgContainer.classList.add("hidden");
         }

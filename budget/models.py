@@ -63,6 +63,10 @@ class Transaction(models.Model):
     def clean(self):
         if self.category and not self.outflow:
             raise ValidationError("You need to provide an outflow for the category")
+        if self.outflow and not self.category:
+            raise ValidationError("You need to provide a category for the outflow")
+        if not self.outflow and not self.inflow:
+            raise ValidationError("You need to provide an inflow or an outflow")
 
     def save(self, *args, **kwargs):
         self.full_clean()
