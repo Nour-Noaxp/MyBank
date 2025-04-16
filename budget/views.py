@@ -4,8 +4,6 @@ from .models import Account, Budget, Category, Transaction
 from .forms import AccountForm, CategoryForm
 from django.http import JsonResponse
 import json
-from django.utils import timezone
-from datetime import datetime
 
 
 def dashboard_view(request):
@@ -92,18 +90,23 @@ def transaction_create_view(request, account_id):
         fetch_data = json.loads(request.body)
         print("fetch get data category: ", fetch_data.get("category") or 0)
         print("fetch get data outflow: ", fetch_data.get("outflow") or 0)
-        print("fetch get data date: ", fetch_data.get(("date") or timezone.now()))
+        print("fetch get data date: ", fetch_data.get("date"))
+
         date = fetch_data.get("date")
         payee = fetch_data.get("payee")
         category_id = fetch_data.get("category")
         memo = fetch_data.get("memo")
-        outflow = outflow = fetch_data.get("outflow") or 0
-        inflow = inflow = fetch_data.get("inflow") or 0
+        outflow = fetch_data.get("outflow") or 0
+        inflow = fetch_data.get("inflow") or 0
 
         if not date:
-            return JsonResponse({"status": False, "message": "Date value is missing"})
+            return JsonResponse(
+                {"success": False, "message": "Date value is missing"}, status=400
+            )
         if not payee:
-            return JsonResponse({"status": False, "message": "Payee value is missing"})
+            return JsonResponse(
+                {"success": False, "message": "Payee value is missing"}, status=400
+            )
 
         if category_id:
             category = Category.objects.get(id=category_id)
@@ -113,22 +116,24 @@ def transaction_create_view(request, account_id):
         if int(outflow) > 0 and not category:
             return JsonResponse(
                 {
-                    "status": False,
+                    "success": False,
                     "message": "You need to provide a category for the outflow",
-                }
+                },
+                status=400,
             )
 
         if int(outflow) == 0 and int(inflow) == 0:
             return JsonResponse(
                 {
-                    "status": False,
+                    "success": False,
                     "message": "You need to provide either an outflow or an inflow value",
-                }
+                },
+                status=400,
             )
 
         if not payee:
             return JsonResponse(
-                {"status": False, "message": "Payee can't be empty"}, status=400
+                {"success": False, "message": "Payee can't be empty"}, status=400
             )
 
         transaction = Transaction(
@@ -144,7 +149,7 @@ def transaction_create_view(request, account_id):
         transaction.save()
         print("Transaction new object : ", transaction.__dict__)
         data = {
-            "status": True,
+            "success": True,
             "id": transaction.id,
             "account_id": transaction.account.id,
             "category": str(transaction.category),
@@ -156,7 +161,8 @@ def transaction_create_view(request, account_id):
         }
         return JsonResponse(data)
     return JsonResponse(
-        {"status": False, "message": "Error while receiving data in transaction view"}
+        {"success": False, "message": "Error while receiving data in transaction view"},
+        status=500,
     )
 
 

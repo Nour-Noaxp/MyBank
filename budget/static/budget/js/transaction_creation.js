@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const transactionForm = document.querySelector(".transaction-form");
   const addTransactionBtn = document.querySelector(".add-transaction-btn");
   const cancelBtn = document.querySelector(".cancel-btn");
-  const saveBtn = document.querySelector(".save-Btn");
   const accountId = transactionForm.dataset.accountId;
   const csrfToken = transactionForm.dataset.csrfToken;
   const errorMsgContainer = document.querySelector(".error-message-container");
@@ -27,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     console.log("raw data", data);
     console.log("stringified data", JSON.stringify(data));
-    console.log(`accounts/${accountId}/transactions/new`);
+    console.log("fetch url : ", `accounts/${accountId}/transactions/new`);
 
     fetch(`/accounts/${accountId}/transactions/new`, {
       method: "POST",
@@ -39,13 +38,17 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Request Error!!!!!!");
+          return response.json().then((error) => {
+            console.log("Response status : ", response.status);
+            console.log("Response Error : ", error);
+            throw new Error(error.message);
+          });
         }
         return response.json();
       })
       .then((data) => {
-        console.log("promise data", data);
-        if (!data.status) {
+        console.log("response data : ", data);
+        if (!data.success) {
           errorMsgContainer.innerHTML = `<div>${data.message}</div>`;
           errorMsgContainer.classList.remove("hidden");
           console.log("data error message : ", data.message);
@@ -67,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       })
       .catch((error) => {
-        console.log("Promise Error!!!!! :", error);
+        console.log("Promise Error : ", error.message);
       });
   });
 });
