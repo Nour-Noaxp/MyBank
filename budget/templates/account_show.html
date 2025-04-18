@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
   <div class="bg-white mx-auto m-10 p-10 py-8 border rounded-lg gap-y-4 max-w-2xl flex gap-8">
-    <div class="w-fit">
+    <div class="whitespace-nowrap">
       <label class="font-medium text-gray-900">Name :</label>
       <div class="mt-2 py-2">{{ account.name }}</div>
     </div>
-    <div class="w-fit">
+    <div class="whitespace-nowrap">
       <label class="font-medium text-gray-900">Type :</label>
       <div class="mt-2 py-2">{{ account.kind }}</div>
     </div>
-    <div class="w-fit">
+    <div class="whitespace-nowrap">
       <label class="font-medium text-gray-900">Working Balance :</label>
       <div class="mt-2 py-2">{{ account.working_balance }}</div>
     </div>
-    <div class="w-fit">
+    <div class="whitespace-nowrap">
       <label class="font-medium text-gray-900">Created At :</label>
       <div class="mt-2 py-2">{{ account.created_at }}</div>
     </div>
