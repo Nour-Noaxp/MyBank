@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
   addTransactionBtn.addEventListener("click", () => {
     formContainer.classList.remove("hidden");
   });
-  cancelBtn.addEventListener("click", () => {
+  cancelBtn.addEventListener("click", (event) => {
+    event.preventDefault();
     formContainer.classList.add("hidden");
     errorMsgContainer.classList.add("hidden");
     errorMsgContainer.innerHTML = "";
@@ -18,16 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   transactionForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    const data = {
-      date: document.querySelector(".date-input").value,
-      payee: document.querySelector(".payee-input").value,
-      category_id: document.querySelector(".category-id-input").value,
-      memo: document.querySelector(".memo-input").value,
-      outflow: document.querySelector(".outflow-input").value,
-      inflow: document.querySelector(".inflow-input").value,
-    };
-    console.log("raw data", data);
-    console.log("stringified data", JSON.stringify(data));
+    const formData = new FormData(transactionForm);
+    const formValues = Object.fromEntries(formData.entries());
+    console.log("form values : ", formValues);
     console.log("fetch url : ", `accounts/${accountId}/transactions/new`);
 
     fetch(`/accounts/${accountId}/transactions/new`, {
@@ -36,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "Content-Type": "application/json",
         "X-CSRFToken": csrfToken,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(formValues),
     })
       .then((response) => {
         if (!response.ok) {
@@ -68,17 +62,14 @@ document.addEventListener("DOMContentLoaded", () => {
           transactionRow.classList.add("border-b", "border-gray-200");
           transactionRow.innerHTML = `
         <td class="py-4 px-3 pl-4 font-medium text-gray-900">${formatted_date}</td>
-        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["payee"]}</td>
-        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["category"]}</td>
-        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["memo"]}</td>
-        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["outflow"]}</td>
-        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["inflow"]}</td>`;
+        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.payee}</td>
+        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.category}</td>
+        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.memo}</td>
+        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.outflow}</td>
+        <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.inflow}</td>`;
           transactionForm.reset();
           errorMsgContainer.classList.add("hidden");
         }
-      })
-      .catch((error) => {
-        console.log("Promise Error : ", error.message);
       });
   });
 });
