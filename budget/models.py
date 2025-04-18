@@ -72,10 +72,11 @@ class Transaction(models.Model):
         self.full_clean()
         super().save(*args, **kwargs)
 
-    def get_pretty_errors(errors):
+    @staticmethod
+    def get_pretty_errors(error_dict):
         pretty_errors = []
 
-        for field, messages in errors.items():
+        for field, messages in error_dict.items():
             for msg in messages:
                 if field == "__all__":
                     pretty_errors.append(msg)
