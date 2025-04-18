@@ -71,3 +71,20 @@ class Transaction(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
+
+    def get_pretty_errors(errors):
+        pretty_errors = []
+
+        for field, messages in errors.items():
+            for msg in messages:
+                if field == "__all__":
+                    pretty_errors.append(msg)
+                else:
+                    msg = msg.replace("This field", f"{field.capitalize()} field")
+                    msg = msg.replace(
+                        "“” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ] format.",
+                        "Date field cannot be blank",
+                    )
+
+                    pretty_errors.append(msg)
+        return pretty_errors

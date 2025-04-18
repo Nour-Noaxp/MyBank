@@ -95,7 +95,7 @@ def transaction_create_view(request, account_id):
                 account=account,
                 date=fetch_data.get("date"),
                 payee=fetch_data.get("payee"),
-                category_id=fetch_data.get("category") or None,
+                category_id=fetch_data.get("category_id") or None,
                 memo=fetch_data.get("memo"),
                 outflow=fetch_data.get("outflow") or 0,
                 inflow=fetch_data.get("inflow") or 0,
@@ -106,8 +106,9 @@ def transaction_create_view(request, account_id):
             return JsonResponse(data)
 
         except ValidationError as ve:
+            pretty_errors = Transaction.get_pretty_errors(ve.message_dict)
             return JsonResponse(
-                {"success": False, "errors": ve.message_dict},
+                {"success": False, "errors": pretty_errors},
             )
     return JsonResponse(
         {"success": False, "message": "Error while receiving data in transaction view"},

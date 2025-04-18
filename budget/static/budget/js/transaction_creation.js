@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   cancelBtn.addEventListener("click", () => {
     formContainer.classList.add("hidden");
+    errorMsgContainer.classList.add("hidden");
+    errorMsgContainer.innerHTML = "";
   });
 
   transactionForm.addEventListener("submit", (event) => {
@@ -19,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = {
       date: document.querySelector(".date-input").value,
       payee: document.querySelector(".payee-input").value,
-      category: document.querySelector(".category-input").value,
+      category_id: document.querySelector(".category-id-input").value,
       memo: document.querySelector(".memo-input").value,
       outflow: document.querySelector(".outflow-input").value,
       inflow: document.querySelector(".inflow-input").value,
@@ -49,12 +51,12 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => {
         console.log("response data : ", data);
         if (!data.success) {
-          errorMsgContainer.innerHTML = `<div>${data["errors"]["__all__"]}</div>`;
-          Object.entries(data["errors"]).forEach(([key, value]) => {
-            const errorDiv = document.createElement("div");
-            errorDiv.textContent = `${key}: ${value}`;
-            errorMsgContainer.appendChild(errorDiv);
-            // errorMsgContainer.appendChild(`<div>${`${key}: ${value}`}</div>`);
+          errorMsgContainer.innerHTML = "";
+          data.errors.forEach((error) => {
+            const divError = document.createElement("div");
+            divError.textContent = error;
+            divError.className = "rounded-xl bg-red-200 w-fit p-2 my-4";
+            errorMsgContainer.appendChild(divError);
           });
           errorMsgContainer.classList.remove("hidden");
           console.log("data error message : ", data["errors"]);
