@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => {
         if (data.success) {
           const tableBody = document.querySelector(".table-body");
-          const date = new Date(data["transaction"]["date"]);
+          const date = new Date(data.transaction.date);
           const formatted_date = date.toLocaleString("fr-FR");
           const transactionRow = tableBody.insertRow(0);
           transactionRow.classList.add("border-b", "border-gray-200");
