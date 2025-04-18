@@ -45,11 +45,11 @@ document.addEventListener("DOMContentLoaded", () => {
           transactionRow.classList.add("border-b", "border-gray-200");
           transactionRow.innerHTML = `
             <td class="py-4 px-3 pl-4 font-medium text-gray-900">${formatted_date}</td>
-            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["payee"]}</td>
-            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["category"]}</td>
-            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["memo"]}</td>
-            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["outflow"]}</td>
-            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data["transaction"]["inflow"]}</td>`;
+            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.payee}</td>
+            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.category}</td>
+            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.memo}</td>
+            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.outflow}</td>
+            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.inflow}</td>`;
           transactionForm.reset();
           errorMsgContainer.classList.add("hidden");
         } else {
