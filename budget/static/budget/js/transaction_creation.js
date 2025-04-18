@@ -18,14 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   transactionForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    const data = {
-      date: document.querySelector(".date-input").value,
-      payee: document.querySelector(".payee-input").value,
-      category_id: document.querySelector(".category-id-input").value,
-      memo: document.querySelector(".memo-input").value,
-      outflow: document.querySelector(".outflow-input").value,
-      inflow: document.querySelector(".inflow-input").value,
-    };
+    const formData = new FormData(transactionForm);
+    const formValues = Object.fromEntries(formData.entries());
+    console.log("form values : ", formValues);
+    console.log("fetch url : ", `accounts/${accountId}/transactions/new`);
 
     fetch(`/accounts/${accountId}/transactions/new`, {
       method: "POST",
@@ -33,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "Content-Type": "application/json",
         "X-CSRFToken": csrfToken,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(formValues),
     })
       .then((response) => {
         if (response.ok) {
