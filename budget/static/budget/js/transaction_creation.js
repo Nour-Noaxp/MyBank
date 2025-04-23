@@ -42,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
           const tableBody = document.querySelector(".table-body");
           const date = new Date(data.transaction.date);
           const working_balance = data.working_balance;
-          console.log("working balance received", working_balance);
           const formatted_date = date.toLocaleString("fr-FR");
           const transactionRow = tableBody.insertRow(0);
           transactionRow.classList.add("border-b", "border-gray-200");
