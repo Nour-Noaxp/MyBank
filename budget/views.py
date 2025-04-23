@@ -1,7 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.core.exceptions import ValidationError
+from django.http import JsonResponse
+from django.forms.models import model_to_dict
 from .models import Account, Budget, Category, Transaction
 from .forms import AccountForm, CategoryForm
+import json
 
 
 def dashboard_view(request):
@@ -29,7 +33,7 @@ def budget_assign_view(request):
             request, "Budget Successfully Assigned to {}".format(category.name)
         )
         return redirect("dashboard")
-    messages.error(request, "Invalid data, please the amount and category")
+    messages.error(request, "Invalid data, please verify the amount and category")
     return redirect("dashboard")
 
 
@@ -48,10 +52,14 @@ def account_create_view(request):
 
 
 def account_show_view(request, account_id):
+    budget = Budget.objects.first()
     account = get_object_or_404(Account, pk=account_id)
     transactions = Transaction.objects.filter(account=account)
+    categories = Category.objects.filter(budget=budget)
     return render(
-        request, "account_show.html", {"account": account, "transactions": transactions}
+        request,
+        "account_show.html",
+        {"account": account, "transactions": transactions, "categories": categories},
     )
 
 
@@ -75,6 +83,37 @@ def account_delete_view(request, account_id):
     account.delete()
     messages.success(request, "Account Successfully Deleted!")
     return redirect("accounts-list")
+
+
+def transaction_create_view(request, account_id):
+    account = get_object_or_404(Account, pk=account_id)
+    if request.method == "POST":
+        try:
+            fetch_data = json.loads(request.body)
+
+            transaction = Transaction(
+                account=account,
+                date=fetch_data.get("date"),
+                payee=fetch_data.get("payee"),
+                category_id=fetch_data.get("category_id") or None,
+                memo=fetch_data.get("memo"),
+                outflow=fetch_data.get("outflow") or 0,
+                inflow=fetch_data.get("inflow") or 0,
+            )
+            transaction.save()
+            data = {"success": True, "transaction": model_to_dict(transaction)}
+            data["transaction"]["category"] = str(transaction.category)
+            return JsonResponse(data)
+
+        except ValidationError as ve:
+            pretty_errors = Transaction.get_pretty_errors(ve.message_dict)
+            return JsonResponse(
+                {"success": False, "errors": pretty_errors},
+            )
+    return JsonResponse(
+        {"success": False, "message": "Error while receiving data in transaction view"},
+        status=400,
+    )
 
 
 def category_create_view(request):

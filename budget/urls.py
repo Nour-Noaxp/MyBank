@@ -24,4 +24,9 @@ urlpatterns = [
         views.category_delete_view,
         name="category-delete",
     ),
+    path(
+        "accounts/<account_id>/transactions/new",
+        views.transaction_create_view,
+        name="transaction-create",
+    ),
 ]

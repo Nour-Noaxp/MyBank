@@ -1,0 +1,67 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const formContainer = document.querySelector(".form-container");
+  const transactionForm = document.querySelector(".transaction-form");
+  const addTransactionBtn = document.querySelector(".add-transaction-btn");
+  const cancelBtn = document.querySelector(".cancel-btn");
+  const { accountId, csrfToken } = transactionForm.dataset;
+  const errorMsgContainer = document.querySelector(".error-message-container");
+
+  addTransactionBtn.addEventListener("click", () => {
+    formContainer.classList.remove("hidden");
+  });
+  cancelBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    formContainer.classList.add("hidden");
+    errorMsgContainer.classList.add("hidden");
+    errorMsgContainer.innerHTML = "";
+  });
+
+  transactionForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const formData = new FormData(transactionForm);
+    const formValues = Object.fromEntries(formData.entries());
+    console.log("form values : ", formValues);
+    console.log("fetch url : ", `accounts/${accountId}/transactions/new`);
+
+    fetch(`/accounts/${accountId}/transactions/new`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
+      },
+      body: JSON.stringify(formValues),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (data.success) {
+          const tableBody = document.querySelector(".table-body");
+          const date = new Date(data.transaction.date);
+          const formatted_date = date.toLocaleString("fr-FR");
+          const transactionRow = tableBody.insertRow(0);
+          transactionRow.classList.add("border-b", "border-gray-200");
+          transactionRow.innerHTML = `
+            <td class="py-4 px-3 pl-4 font-medium text-gray-900">${formatted_date}</td>
+            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.payee}</td>
+            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.category}</td>
+            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.memo}</td>
+            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.outflow}</td>
+            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.inflow}</td>`;
+          transactionForm.reset();
+          errorMsgContainer.classList.add("hidden");
+        } else {
+          errorMsgContainer.innerHTML = "";
+          data.errors.forEach((error) => {
+            const divError = document.createElement("div");
+            divError.textContent = error;
+            divError.className = "rounded-xl bg-red-200 w-fit p-2 my-4";
+            errorMsgContainer.appendChild(divError);
+          });
+          errorMsgContainer.classList.remove("hidden");
+        }
+      });
+  });
+});
