@@ -4,23 +4,27 @@ from django.dispatch import receiver
 
 
 @receiver(post_save, sender=Account)
-def update_budget(sender, instance, **kwargs):
+def update_budget(sender, instance, created, **kwargs):
     budget = Budget.objects.first()
-    budget.ready_to_assign += instance.working_balance
-    budget.save()
+    if created:
+        budget.ready_to_assign += instance.working_balance
+        budget.save()
 
 
 @receiver(post_save, sender=Transaction)
-def update_category_and_account(sender, instance, **kwargs):
-    if instance.outflow > 0:
-        instance.category.available -= instance.outflow
-        instance.category.activity -= instance.outflow
-        instance.account.working_balance -= instance.outflow
-        instance.category.save()
-        instance.account.save()
-    elif instance.inflow > 0:
-        budget = instance.account.budget
-        instance.account.working_balance += instance.inflow
-        budget.ready_to_assign += instance.inflow
-        instance.account.save()
-        budget.save()
+def update_category_and_account(sender, instance, created, **kwargs):
+    account = instance.account
+    if created:
+        if instance.outflow > 0:
+            category = instance.category
+            category.available -= instance.outflow
+            category.activity -= instance.outflow
+            account.working_balance -= instance.outflow
+            category.save()
+            account.save()
+        elif instance.inflow > 0:
+            budget = instance.account.budget
+            account.working_balance += instance.inflow
+            budget.ready_to_assign += instance.inflow
+            account.save()
+            budget.save()
