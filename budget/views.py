@@ -90,6 +90,10 @@ def transaction_create_view(request, account_id):
     if request.method == "POST":
         try:
             fetch_data = json.loads(request.body)
+            print(
+                "account working balance before transaction creation : ",
+                account.working_balance,
+            )
 
             transaction = Transaction(
                 account=account,
@@ -101,8 +105,21 @@ def transaction_create_view(request, account_id):
                 inflow=fetch_data.get("inflow") or 0,
             )
             transaction.save()
-            data = {"success": True, "transaction": model_to_dict(transaction)}
+            print(
+                "account working balnce after transaction creation : ",
+                account.working_balance,
+            )
+            data = {
+                "success": True,
+                "transaction": model_to_dict(transaction),
+                "working_balance": account.working_balance,
+            }
             data["transaction"]["category"] = str(transaction.category)
+
+            print(
+                "dataa send from view : ",
+                data,
+            )
             return JsonResponse(data)
 
         except ValidationError as ve:

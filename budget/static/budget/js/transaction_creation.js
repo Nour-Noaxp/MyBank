@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const cancelBtn = document.querySelector(".cancel-btn");
   const { accountId, csrfToken } = transactionForm.dataset;
   const errorMsgContainer = document.querySelector(".error-message-container");
+  const workingBalanceElement = document.querySelector(".working-balance");
 
   addTransactionBtn.addEventListener("click", () => {
     formContainer.classList.remove("hidden");
@@ -40,6 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.success) {
           const tableBody = document.querySelector(".table-body");
           const date = new Date(data.transaction.date);
+          const working_balance = data.working_balance;
+          console.log("working balance received", working_balance);
           const formatted_date = date.toLocaleString("fr-FR");
           const transactionRow = tableBody.insertRow(0);
           transactionRow.classList.add("border-b", "border-gray-200");
@@ -52,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.inflow}</td>`;
           transactionForm.reset();
           errorMsgContainer.classList.add("hidden");
+          workingBalanceElement.textContent = working_balance;
         } else {
           errorMsgContainer.innerHTML = "";
           data.errors.forEach((error) => {
