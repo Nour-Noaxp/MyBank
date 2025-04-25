@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const cancelBtn = document.querySelector(".cancel-btn");
   const { accountId, csrfToken } = transactionForm.dataset;
   const errorMsgContainer = document.querySelector(".error-message-container");
+  const workingBalanceElement = document.querySelector(".working-balance");
 
   addTransactionBtn.addEventListener("click", () => {
     formContainer.classList.remove("hidden");
@@ -40,11 +41,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.success) {
           const tableBody = document.querySelector(".table-body");
           const date = new Date(data.transaction.date);
-          const formatted_date = date.toLocaleString("fr-FR");
+          const workingBalance = data.working_balance;
+          const formttedDate = date.toLocaleString("fr-FR");
           const transactionRow = tableBody.insertRow(0);
           transactionRow.classList.add("border-b", "border-gray-200");
           transactionRow.innerHTML = `
-            <td class="py-4 px-3 pl-4 font-medium text-gray-900">${formatted_date}</td>
+            <td class="py-4 px-3 pl-4 font-medium text-gray-900">${formattedDate}</td>
             <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.payee}</td>
             <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.category}</td>
             <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.memo}</td>
@@ -52,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.inflow}</td>`;
           transactionForm.reset();
           errorMsgContainer.classList.add("hidden");
+          workingBalanceElement.textContent = workingBalance;
         } else {
           errorMsgContainer.innerHTML = "";
           data.errors.forEach((error) => {

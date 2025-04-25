@@ -90,7 +90,6 @@ def transaction_create_view(request, account_id):
     if request.method == "POST":
         try:
             fetch_data = json.loads(request.body)
-
             transaction = Transaction(
                 account=account,
                 date=fetch_data.get("date"),
@@ -101,7 +100,11 @@ def transaction_create_view(request, account_id):
                 inflow=fetch_data.get("inflow") or 0,
             )
             transaction.save()
-            data = {"success": True, "transaction": model_to_dict(transaction)}
+            data = {
+                "success": True,
+                "transaction": model_to_dict(transaction),
+                "working_balance": account.working_balance,
+            }
             data["transaction"]["category"] = str(transaction.category)
             return JsonResponse(data)
 
