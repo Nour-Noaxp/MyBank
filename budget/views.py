@@ -54,7 +54,7 @@ def account_create_view(request):
 def account_show_view(request, account_id):
     budget = Budget.objects.first()
     account = get_object_or_404(Account, pk=account_id)
-    transactions = Transaction.objects.filter(account=account)
+    transactions = Transaction.objects.filter(account=account).order_by("-date")
     categories = Category.objects.filter(budget=budget)
     return render(
         request,
