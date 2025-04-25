@@ -119,6 +119,15 @@ def transaction_create_view(request, account_id):
     )
 
 
+def transaction_delete_view(request, account_id, transaction_id):
+    # account = get_object_or_404(Account, account_id)
+    transaction = Transaction.objects.get(id=transaction_id, account_id=account_id)
+    print("transaction to delete", transaction)
+    transaction.delete()
+    messages.success(request, "Transaction Successfully Deleted!")
+    return redirect("account-show", account_id=account_id)
+
+
 def category_create_view(request):
     form = CategoryForm
     budget = Budget.objects.first()

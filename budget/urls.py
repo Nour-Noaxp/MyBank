@@ -29,4 +29,9 @@ urlpatterns = [
         views.transaction_create_view,
         name="transaction-create",
     ),
+    path(
+        "accounts/<account_id>/transactions/<transaction_id>/delete",
+        views.transaction_delete_view,
+        name="transaction-delete",
+    ),
 ]
