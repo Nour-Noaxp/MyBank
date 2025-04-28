@@ -120,11 +120,29 @@ def transaction_create_view(request, account_id):
 
 
 def transaction_delete_view(request, account_id, transaction_id):
-    transaction = Transaction.objects.get(id=transaction_id, account_id=account_id)
-    print("transaction to delete", transaction)
-    transaction.delete()
-    messages.success(request, "Transaction Successfully Deleted!")
-    return redirect("account-show", account_id=account_id)
+    if request.method == "DELETE":
+        try:
+            transaction = Transaction.objects.get(
+                id=transaction_id, account_id=account_id
+            )
+            print("transaction to delete", transaction)
+            transaction.delete()
+            messages.success(request, "Transaction Successfully Deleted!")
+            data = {
+                "success": True,
+                "message": "Transaction deleted with success",
+            }
+            return JsonResponse(data)
+
+        except ValidationError as ve:
+            pretty_errors = Transaction.get_pretty_errors(ve.message_dict)
+            return JsonResponse(
+                {"success": False, "errors": pretty_errors},
+            )
+    return JsonResponse(
+        {"success": False, "message": "Error while receiving data in transaction view"},
+        status=400,
+    )
 
 
 def category_create_view(request):
