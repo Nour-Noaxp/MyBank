@@ -126,8 +126,8 @@ def transaction_delete_view(request, account_id, transaction_id):
                 id=transaction_id, account_id=account_id
             )
             print("transaction to delete", transaction)
+            # raise ValidationError("test d'erreur")
             transaction.delete()
-            messages.success(request, "Transaction Successfully Deleted!")
             data = {
                 "success": True,
                 "message": "Transaction deleted with success",
@@ -135,7 +135,10 @@ def transaction_delete_view(request, account_id, transaction_id):
             return JsonResponse(data)
 
         except ValidationError as ve:
+            print("validation error", ve)
+            print("validation message_dict error", ve.message_dict)
             pretty_errors = Transaction.get_pretty_errors(ve.message_dict)
+            print("validation message_dict pretty error", pretty_errors)
             return JsonResponse(
                 {"success": False, "errors": pretty_errors},
             )

@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       })
       .then((data) => {
-        console.log("Suppression réussie:", data);
+        console.log("raw data content : ", data);
         if (data.success) {
           const transactionRow = document.querySelector(
             `.table-row[data-transaction-id="${transactionId}"]`
