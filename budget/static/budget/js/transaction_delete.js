@@ -2,13 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const deleteButtons = document.querySelectorAll(".delete-button");
   const csrfContainer = document.querySelector(".csrf-container");
   const csrfToken = csrfContainer.dataset.csrfToken;
-  console.log("tessst");
+  const workingBalanceElement = document.querySelector(".working-balance");
 
   deleteButtons.forEach((button) => {
     button.addEventListener("click", (e) => {
       e.preventDefault();
       const url = button.getAttribute("href");
-      console.log("fetch url : ", url);
       fetch(url, {
         method: "DELETE",
         headers: {
@@ -19,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .then((response) => {
           console.log("inside fetch request with response : ", response);
           if (response.ok) {
-            if (response.status == 204) {
+            if (response.status == 200) {
               console.log("Transaction successfully delete!");
               return { success: true };
             }
@@ -30,10 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
           console.log("raw data content : ", data);
           if (data.success) {
             const transactionId = data.transaction_id;
+            const workingBalance = data.working_balance;
+            console.log("transaction id", transactionId);
             const transactionRow = document.querySelector(
               `.table-row[data-transaction-id="${transactionId}"]`
             );
             transactionRow.remove();
+            workingBalanceElement.textContent = workingBalance;
           } else {
             data.errors.forEach((error) => {
               console.log(error);
