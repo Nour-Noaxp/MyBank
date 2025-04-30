@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
+<div class="csrf-container" data-csrf-token="{{ csrf_token }}"></div>
   <div class="bg-white mx-auto m-10 p-10 py-8 border rounded-lg gap-y-4 max-w-2xl flex gap-8">
     <div class="whitespace-nowrap">
       <label class="font-medium text-gray-900">Name :</label>
