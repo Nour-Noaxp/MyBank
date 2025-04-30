@@ -1,13 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
   const deleteButton = document.querySelector(".delete-button");
-  const transactionForm = document.querySelector(".transaction-form");
-  const { accountId, csrfToken } = transactionForm.dataset;
+  // const transactionForm = document.querySelector(".transaction-form");
+  // const { accountId, csrfToken } = transactionForm.dataset;
+  console.log("tessst");
 
   deleteButton.addEventListener("click", (e) => {
     e.preventDefault();
-    const transactionId = document.querySelector(`[data-transaction-id]`)
-      .dataset.transactionId;
-    fetch(`/accounts/${accountId}/transactions/${transactionId}/delete`, {
+    const url = deleteButton.getAttribute("href");
+    console.log("fetch url : ", url);
+    fetch(url, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -15,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     })
       .then((response) => {
+        console.log("inside fetch request with response : ", response);
         if (response.ok) {
           if (response.status == 204) {
             console.log("Transaction supprimée avec succès");
@@ -26,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .then((data) => {
         console.log("raw data content : ", data);
         if (data.success) {
+          const transactionId = data.transaction_id;
           const transactionRow = document.querySelector(
             `.table-row[data-transaction-id="${transactionId}"]`
           );

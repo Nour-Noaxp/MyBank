@@ -122,8 +122,8 @@ def transaction_create_view(request, account_id):
 def transaction_delete_view(request, account_id, transaction_id):
     if request.method == "DELETE":
         try:
-            transaction = Transaction.objects.get(
-                id=transaction_id, account_id=account_id
+            transaction = get_object_or_404(
+                Transaction, pk=transaction_id, account_id=account_id
             )
             print("transaction to delete", transaction)
             # raise ValidationError("test d'erreur")
@@ -131,6 +131,7 @@ def transaction_delete_view(request, account_id, transaction_id):
             data = {
                 "success": True,
                 "message": "Transaction deleted with success",
+                "transaction_id": transaction_id,
             }
             return JsonResponse(data)
 
