@@ -18,10 +18,6 @@ document.addEventListener("DOMContentLoaded", () => {
         .then((response) => {
           console.log("inside fetch request with response : ", response);
           if (response.ok) {
-            if (response.status == 200) {
-              console.log("Transaction successfully delete!");
-              return { success: true };
-            }
             return response.json();
           }
         })

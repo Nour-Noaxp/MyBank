@@ -127,7 +127,6 @@ def transaction_delete_view(request, account_id, transaction_id):
             )
             print("transaction to delete", transaction)
             transaction.delete()
-            messages.success(request, "Transaction Successfully Deleted!")
             data = {
                 "success": True,
                 "message": "Transaction deleted with success",
