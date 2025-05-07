@@ -6,10 +6,50 @@ document.addEventListener("DOMContentLoaded", () => {
   const { accountId, csrfToken } = transactionForm.dataset;
   const errorMsgContainer = document.querySelector(".error-message-container");
   const workingBalanceElement = document.querySelector(".working-balance");
+  const deleteButtons = document.querySelectorAll(".delete-button");
+
+  function deleteTransaction(e, deleteButton) {
+    e.preventDefault();
+    const url = deleteButton.getAttribute("href");
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (data.success) {
+          const transactionId = data.transaction_id;
+          const workingBalance = data.working_balance;
+          const transactionRow = document.querySelector(
+            `.table-row[data-transaction-id="${transactionId}"]`
+          );
+          transactionRow.remove();
+          workingBalanceElement.textContent = workingBalance;
+        } else {
+          data.errors.forEach((error) => {
+            console.log(error);
+          });
+        }
+      });
+  }
+
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      deleteTransaction(e, button);
+    });
+  });
 
   addTransactionBtn.addEventListener("click", () => {
     formContainer.classList.remove("hidden");
   });
+
   cancelBtn.addEventListener("click", (e) => {
     e.preventDefault();
     formContainer.classList.add("hidden");
@@ -41,14 +81,14 @@ document.addEventListener("DOMContentLoaded", () => {
           const date = new Date(data.transaction.date);
           const workingBalance = data.working_balance;
           const formattedDate = date.toLocaleString("fr-FR");
-          const transactionRow = tableBody.insertRow(0);
-          transactionRow.classList.add(
+          const newTransactionRow = tableBody.insertRow(0);
+          newTransactionRow.classList.add(
             "table-row",
             "border-b",
             "border-gray-200"
           );
-          transactionRow.dataset.transactionId = data.transaction.id;
-          transactionRow.innerHTML = `
+          newTransactionRow.dataset.transactionId = data.transaction.id;
+          newTransactionRow.innerHTML = `
             <td class="py-4 px-3 pl-4 font-medium text-gray-900">${formattedDate}</td>
             <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.payee}</td>
             <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.category}</td>
@@ -62,37 +102,10 @@ document.addEventListener("DOMContentLoaded", () => {
           </a>
         </td>`;
 
-          const deleteButton = transactionRow.querySelector(".delete-button");
+          const deleteButton =
+            newTransactionRow.querySelector(".delete-button");
           deleteButton.addEventListener("click", (e) => {
-            e.preventDefault();
-            const url = deleteButton.getAttribute("href");
-            fetch(url, {
-              method: "DELETE",
-              headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": csrfToken,
-              },
-            })
-              .then((response) => {
-                if (response.ok) {
-                  return response.json();
-                }
-              })
-              .then((data) => {
-                if (data.success) {
-                  const transactionId = data.transaction_id;
-                  const workingBalance = data.working_balance;
-                  const transactionRow = document.querySelector(
-                    `.table-row[data-transaction-id="${transactionId}"]`
-                  );
-                  transactionRow.remove();
-                  workingBalanceElement.textContent = workingBalance;
-                } else {
-                  data.errors.forEach((error) => {
-                    console.log(error);
-                  });
-                }
-              });
+            deleteTransaction(e, deleteButton);
           });
 
           transactionForm.reset();
