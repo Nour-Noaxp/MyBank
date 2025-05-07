@@ -125,7 +125,6 @@ def transaction_delete_view(request, account_id, transaction_id):
             transaction = get_object_or_404(
                 Transaction, pk=transaction_id, account_id=account_id
             )
-            print("transaction to delete", transaction)
             transaction.delete()
             data = {
                 "success": True,

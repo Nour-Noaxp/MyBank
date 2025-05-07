@@ -21,8 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     const formData = new FormData(transactionForm);
     const formValues = Object.fromEntries(formData.entries());
-    console.log("form values : ", formValues);
-    console.log("fetch url : ", `accounts/${accountId}/transactions/new`);
 
     fetch(`/accounts/${accountId}/transactions/new`, {
       method: "POST",
@@ -39,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .then((data) => {
         if (data.success) {
-          console.log("data received after transaction creation!!!!!! :", data);
           const tableBody = document.querySelector(".table-body");
           const date = new Date(data.transaction.date);
           const workingBalance = data.working_balance;
@@ -65,7 +62,6 @@ document.addEventListener("DOMContentLoaded", () => {
           </a>
         </td>`;
 
-          console.log("transaction row : ", transactionRow);
           const deleteButton = transactionRow.querySelector(".delete-button");
           deleteButton.addEventListener("click", (e) => {
             e.preventDefault();
@@ -78,17 +74,14 @@ document.addEventListener("DOMContentLoaded", () => {
               },
             })
               .then((response) => {
-                console.log("inside fetch request with response : ", response);
                 if (response.ok) {
                   return response.json();
                 }
               })
               .then((data) => {
-                console.log("raw data content : ", data);
                 if (data.success) {
                   const transactionId = data.transaction_id;
                   const workingBalance = data.working_balance;
-                  console.log("transaction id", transactionId);
                   const transactionRow = document.querySelector(
                     `.table-row[data-transaction-id="${transactionId}"]`
                   );
