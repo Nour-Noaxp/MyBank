@@ -119,6 +119,31 @@ def transaction_create_view(request, account_id):
     )
 
 
+def transaction_delete_view(request, account_id, transaction_id):
+    if request.method == "DELETE":
+        try:
+            transaction = get_object_or_404(
+                Transaction, pk=transaction_id, account_id=account_id
+            )
+            transaction.delete()
+            data = {
+                "success": True,
+                "message": "Transaction deleted with success",
+                "transaction_id": transaction_id,
+                "working_balance": transaction.account.working_balance,
+            }
+            return JsonResponse(data)
+
+        except ValidationError as ve:
+            return JsonResponse(
+                {"success": False, "errors": ve.message_dict},
+            )
+    return JsonResponse(
+        {"success": False, "errors": "Error while receiving data in transaction view"},
+        status=400,
+    )
+
+
 def category_create_view(request):
     form = CategoryForm
     budget = Budget.objects.first()
