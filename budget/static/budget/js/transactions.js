@@ -8,6 +8,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const workingBalanceElement = document.querySelector(".working-balance");
   const deleteButtons = document.querySelectorAll(".delete-button");
 
+  const showErrorMessages = (errors) => {
+    errorMsgContainer.innerHTML = "";
+    errors.forEach((error) => {
+      const divError = document.createElement("div");
+      divError.textContent = error;
+      divError.className = "rounded-xl bg-red-200 w-fit p-2 my-4";
+      errorMsgContainer.appendChild(divError);
+    });
+    errorMsgContainer.classList.remove("hidden");
+  };
+
   const deleteTransaction = (e, deleteButton) => {
     e.preventDefault();
     const url = deleteButton.getAttribute("href");
@@ -35,20 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
           transactionRow.remove();
           workingBalanceElement.textContent = workingBalance;
         } else {
-          errorMessages(data.errors);
+          showErrorMessages(data.errors);
         }
       });
-  };
-
-  const errorMessages = (errors) => {
-    errorMsgContainer.innerHTML = "";
-    errors.forEach((error) => {
-      const divError = document.createElement("div");
-      divError.textContent = error;
-      divError.className = "rounded-xl bg-red-200 w-fit p-2 my-4";
-      errorMsgContainer.appendChild(divError);
-    });
-    errorMsgContainer.classList.remove("hidden");
   };
 
   deleteButtons.forEach((button) => {
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
           errorMsgContainer.classList.add("hidden");
           workingBalanceElement.textContent = workingBalance;
         } else {
-          errorMessages(data.errors);
+          showErrorMessages(data.errors);
         }
       });
   });
