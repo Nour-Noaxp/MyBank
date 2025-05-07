@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const workingBalanceElement = document.querySelector(".working-balance");
   const deleteButtons = document.querySelectorAll(".delete-button");
 
-  function deleteTransaction(e, deleteButton) {
+  const deleteTransaction = (e, deleteButton) => {
     e.preventDefault();
     const url = deleteButton.getAttribute("href");
     fetch(url, {
@@ -25,20 +25,31 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .then((data) => {
         if (data.success) {
-          const transactionId = data.transaction_id;
-          const workingBalance = data.working_balance;
+          const {
+            transaction_id: transactionId,
+            working_balance: workingBalance,
+          } = data;
           const transactionRow = document.querySelector(
             `.table-row[data-transaction-id="${transactionId}"]`
           );
           transactionRow.remove();
           workingBalanceElement.textContent = workingBalance;
         } else {
-          data.errors.forEach((error) => {
-            console.log(error);
-          });
+          errorMessages(data.errors);
         }
       });
-  }
+  };
+
+  const errorMessages = (errors) => {
+    errorMsgContainer.innerHTML = "";
+    errors.forEach((error) => {
+      const divError = document.createElement("div");
+      divError.textContent = error;
+      divError.className = "rounded-xl bg-red-200 w-fit p-2 my-4";
+      errorMsgContainer.appendChild(divError);
+    });
+    errorMsgContainer.classList.remove("hidden");
+  };
 
   deleteButtons.forEach((button) => {
     button.addEventListener("click", (e) => {
@@ -113,14 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
           errorMsgContainer.classList.add("hidden");
           workingBalanceElement.textContent = workingBalance;
         } else {
-          errorMsgContainer.innerHTML = "";
-          data.errors.forEach((error) => {
-            const divError = document.createElement("div");
-            divError.textContent = error;
-            divError.className = "rounded-xl bg-red-200 w-fit p-2 my-4";
-            errorMsgContainer.appendChild(divError);
-          });
-          errorMsgContainer.classList.remove("hidden");
+          errorMessages(data.errors);
         }
       });
   });
