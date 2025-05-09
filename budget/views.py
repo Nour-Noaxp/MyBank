@@ -144,6 +144,13 @@ def transaction_delete_view(request, account_id, transaction_id):
     )
 
 
+def transaction_edit_view(request, account_id, transaction_id):
+    account = get_object_or_404(Account, pk=account_id)
+    transaction = get_object_or_404(
+        Transaction, pk=transaction_id, account_id=account_id
+    )
+
+
 def category_create_view(request):
     form = CategoryForm
     budget = Budget.objects.first()
