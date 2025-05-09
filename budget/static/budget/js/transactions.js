@@ -31,7 +31,17 @@ document.addEventListener("DOMContentLoaded", () => {
       transactionForm.querySelector('input[name="inflow"]').value =
         button.dataset.inflow;
 
+      const url = transactionForm.dataset.editUrl.replace(
+        "none",
+        transactionId
+      );
+      transactionForm.action = url;
+      console.log("edit button clicked !");
+      console.log("trnsaction form url : ", url);
+
       formContainer.classList.remove("hidden");
+
+      console.log("form action content : ", transactionForm.action);
     });
   });
 
@@ -102,8 +112,13 @@ document.addEventListener("DOMContentLoaded", () => {
     event.preventDefault();
     const formData = new FormData(transactionForm);
     const formValues = Object.fromEntries(formData.entries());
+    transactionForm.action = transactionForm.dataset.createUrl;
+    const url = transactionForm.action;
 
-    fetch(`/accounts/${accountId}/transactions/new`, {
+    console.log("create button clicked !");
+    console.log("trnsaction form url : ", url);
+
+    fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
