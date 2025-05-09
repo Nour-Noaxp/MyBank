@@ -7,7 +7,35 @@ document.addEventListener("DOMContentLoaded", () => {
   const errorMsgContainer = document.querySelector(".error-message-container");
   const workingBalanceElement = document.querySelector(".working-balance");
   const deleteButtons = document.querySelectorAll(".delete-button");
+  const editButtons = document.querySelectorAll(".edit-button");
 
+  editButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      const transactionId = button.dataset.transactionId;
+      const accountId = button.dataset.accountId;
+
+      // <------------------------- Prefill Transaction Fields ------------------------------>
+      console.log("date : ", button.dataset.date);
+
+      transactionForm.querySelector('input[name="date"]').value =
+        button.dataset.date;
+      transactionForm.querySelector('input[name="payee"]').value =
+        button.dataset.payee;
+      transactionForm.querySelector('select[name="category_id"]').value =
+        button.dataset.categoryId;
+      transactionForm.querySelector('input[name="memo"]').value =
+        button.dataset.memo;
+      transactionForm.querySelector('input[name="outflow"]').value =
+        button.dataset.outflow;
+      transactionForm.querySelector('input[name="inflow"]').value =
+        button.dataset.inflow;
+
+      formContainer.classList.remove("hidden");
+    });
+  });
+
+  // <----------------------------- Define Functions ----------------------->
   const showErrorMessages = (errors) => {
     errorMsgContainer.innerHTML = "";
     errors.forEach((error) => {
@@ -50,6 +78,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
   };
+
+  // <---------------------------------------------------->
 
   deleteButtons.forEach((button) => {
     button.addEventListener("click", (e) => {
