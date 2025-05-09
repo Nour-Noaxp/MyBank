@@ -34,4 +34,9 @@ urlpatterns = [
         views.transaction_delete_view,
         name="transaction-delete",
     ),
+    path(
+        "accounts/<account_id>/transactions/<transaction_id>/edit",
+        views.transaction_edit_view,
+        name="transaction-edit",
+    ),
 ]
