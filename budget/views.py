@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
@@ -119,6 +119,48 @@ def transaction_create_view(request, account_id):
     )
 
 
+def transaction_edit_view(request, account_id, transaction_id):
+    account = get_object_or_404(Account, pk=account_id)
+    transaction = get_object_or_404(
+        Transaction, pk=transaction_id, account_id=account_id
+    )
+    if request.method == "POST":
+        try:
+            fetch_data = json.loads(request.body)
+            print("data received from fetch request", fetch_data)
+
+            new_transaction = Transaction(
+                account=account,
+                date=fetch_data.get("date"),
+                payee=fetch_data.get("payee"),
+                category_id=fetch_data.get("category_id") or None,
+                memo=fetch_data.get("memo"),
+                outflow=fetch_data.get("outflow") or 0,
+                inflow=fetch_data.get("inflow") or 0,
+            )
+            new_transaction.save()
+            transaction.delete()
+
+            data = {
+                "success": True,
+                "transaction": model_to_dict(new_transaction),
+                "working_balance": account.working_balance,
+            }
+
+            data["transaction"]["category"] = str(transaction.category)
+            return JsonResponse(data)
+
+        except ValidationError as ve:
+            pretty_errors = Transaction.get_pretty_errors(ve.message_dict)
+            return JsonResponse(
+                {"success": False, "errors": pretty_errors},
+            )
+    return JsonResponse(
+        {"success": False, "message": "Error with your damn post request!!!!"},
+        status=400,
+    )
+
+
 def transaction_delete_view(request, account_id, transaction_id):
     if request.method == "DELETE":
         try:
@@ -141,13 +183,6 @@ def transaction_delete_view(request, account_id, transaction_id):
     return JsonResponse(
         {"success": False, "errors": "Error while receiving data in transaction view"},
         status=400,
-    )
-
-
-def transaction_edit_view(request, account_id, transaction_id):
-    account = get_object_or_404(Account, pk=account_id)
-    transaction = get_object_or_404(
-        Transaction, pk=transaction_id, account_id=account_id
     )
 
 

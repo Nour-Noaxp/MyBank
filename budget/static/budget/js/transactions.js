@@ -8,37 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const workingBalanceElement = document.querySelector(".working-balance");
   const deleteButtons = document.querySelectorAll(".delete-button");
   const editButtons = document.querySelectorAll(".edit-button");
-
-  editButtons.forEach((button) => {
-    button.addEventListener("click", (e) => {
-      // e.preventDefault();
-      // const transactionId = button.dataset.transactionId;
-      // const accountId = button.dataset.accountId;
-      // // <------------------------- Prefill Transaction Fields ------------------------------>
-      // console.log("date : ", button.dataset.date);
-      // transactionForm.querySelector('input[name="date"]').value =
-      //   button.dataset.date;
-      // transactionForm.querySelector('input[name="payee"]').value =
-      //   button.dataset.payee;
-      // transactionForm.querySelector('select[name="category_id"]').value =
-      //   button.dataset.categoryId;
-      // transactionForm.querySelector('input[name="memo"]').value =
-      //   button.dataset.memo;
-      // transactionForm.querySelector('input[name="outflow"]').value =
-      //   button.dataset.outflow;
-      // transactionForm.querySelector('input[name="inflow"]').value =
-      //   button.dataset.inflow;
-      // const url = transactionForm.dataset.editUrl.replace(
-      //   "none",
-      //   transactionId
-      // );
-      // transactionForm.action = url;
-      // console.log("edit button clicked !");
-      // console.log("trnsaction form url : ", url);
-      // formContainer.classList.remove("hidden");
-      // console.log("form action content : ", transactionForm.action);
-    });
-  });
+  const saveButton = transactionForm.querySelector(".save-btn");
 
   // <----------------------------- Show Error Msgs Function ------------------------->
   const showErrorMessages = (errors) => {
@@ -73,84 +43,42 @@ document.addEventListener("DOMContentLoaded", () => {
     transactionForm.querySelector('input[name="inflow"]').value =
       editButton.dataset.inflow;
 
-    const url = transactionForm.dataset.editUrl.replace("none", transactionId);
-    transactionForm.action = url;
+    const editUrl = transactionForm.dataset.editUrl.replace(
+      "none",
+      transactionId
+    );
+    transactionForm.action = editUrl;
     console.log("edit button clicked !");
-    console.log("trnsaction form url : ", url);
+    console.log("transaction form url : ", editUrl);
 
     formContainer.classList.remove("hidden");
 
     console.log("form action content : ", transactionForm.action);
+
+    transactionForm.addEventListener("submit", (e) => {
+      saveTransaction(e, transactionForm, editUrl);
+      const transactionRow = document.querySelector(
+        `.table-row[data-transaction-id="${transctionId}"]`
+      );
+      transactionRow.remove();
+    });
+
+    cancelBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      formContainer.classList.add("hidden");
+      errorMsgContainer.classList.add("hidden");
+      errorMsgContainer.innerHTML = "";
+      transactionForm.reset();
+      errorMsgContainer.classList.add("hidden");
+      // workingBalanceElement.textContent = workingBalance;
+    });
   };
 
-  // <----------------------------- Delete Transaction Function ------------------------->
-
-  const deleteTransaction = (e, deleteButton) => {
+  const saveTransaction = (e, transactionForm, url) => {
     e.preventDefault();
-    const url = deleteButton.getAttribute("href");
-    fetch(url, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": csrfToken,
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-      })
-      .then((data) => {
-        if (data.success) {
-          const {
-            transaction_id: transactionId,
-            working_balance: workingBalance,
-          } = data;
-          const transactionRow = document.querySelector(
-            `.table-row[data-transaction-id="${transactionId}"]`
-          );
-          transactionRow.remove();
-          workingBalanceElement.textContent = workingBalance;
-        } else {
-          showErrorMessages(data.errors);
-        }
-      });
-  };
 
-  // <-------------------------------------------------------------------------->
-
-  editButtons.forEach((button) => {
-    button.addEventListener("click", (e) => {
-      editTransaction(e, button);
-    });
-  });
-
-  deleteButtons.forEach((button) => {
-    button.addEventListener("click", (e) => {
-      deleteTransaction(e, button);
-    });
-  });
-
-  addTransactionBtn.addEventListener("click", () => {
-    formContainer.classList.remove("hidden");
-  });
-
-  cancelBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    formContainer.classList.add("hidden");
-    errorMsgContainer.classList.add("hidden");
-    errorMsgContainer.innerHTML = "";
-  });
-
-  transactionForm.addEventListener("submit", (event) => {
-    event.preventDefault();
     const formData = new FormData(transactionForm);
     const formValues = Object.fromEntries(formData.entries());
-    transactionForm.action = transactionForm.dataset.createUrl;
-    const url = transactionForm.action;
-
-    console.log("create button clicked !");
-    console.log("trnsaction form url : ", url);
 
     fetch(url, {
       method: "POST",
@@ -217,5 +145,72 @@ document.addEventListener("DOMContentLoaded", () => {
           showErrorMessages(data.errors);
         }
       });
+  };
+
+  // <----------------------------- Delete Transaction Function ------------------------->
+
+  const deleteTransaction = (e, deleteButton) => {
+    e.preventDefault();
+    const url = deleteButton.getAttribute("href");
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrfToken,
+      },
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+      })
+      .then((data) => {
+        if (data.success) {
+          const {
+            transaction_id: transactionId,
+            working_balance: workingBalance,
+          } = data;
+          const transactionRow = document.querySelector(
+            `.table-row[data-transaction-id="${transactionId}"]`
+          );
+          transactionRow.remove();
+          workingBalanceElement.textContent = workingBalance;
+        } else {
+          showErrorMessages(data.errors);
+        }
+      });
+  };
+
+  // <-------------------------------------------------------------------------->
+
+  editButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      editTransaction(e, button);
+    });
+  });
+
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", (e) => {
+      deleteTransaction(e, button);
+    });
+  });
+
+  addTransactionBtn.addEventListener("click", () => {
+    formContainer.classList.remove("hidden");
+
+    const createUrl = transactionForm.dataset.createUrl;
+    transactionForm.action = createUrl;
+
+    transactionForm.addEventListener("submit", (e) => {
+      saveTransaction(e, transactionForm, createUrl);
+      console.log("create url :", createUrl);
+    });
+
+    cancelBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      formContainer.classList.add("hidden");
+      errorMsgContainer.classList.add("hidden");
+      errorMsgContainer.innerHTML = "";
+    });
   });
 });
