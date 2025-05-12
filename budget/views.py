@@ -147,7 +147,7 @@ def transaction_edit_view(request, account_id, transaction_id):
                 "working_balance": account.working_balance,
             }
 
-            data["transaction"]["category"] = str(transaction.category)
+            data["transaction"]["category"] = str(new_transaction.category)
             return JsonResponse(data)
 
         except ValidationError as ve:

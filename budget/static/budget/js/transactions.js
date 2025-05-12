@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     transactionForm.addEventListener("submit", (e) => {
       saveTransaction(e, transactionForm, editUrl);
       const transactionRow = document.querySelector(
-        `.table-row[data-transaction-id="${transctionId}"]`
+        `.table-row[data-transaction-id="${transactionId}"]`
       );
       transactionRow.remove();
     });
