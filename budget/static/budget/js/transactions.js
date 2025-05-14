@@ -8,9 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const workingBalanceElement = document.querySelector(".working-balance");
   const deleteButtons = document.querySelectorAll(".delete-button");
   const editButtons = document.querySelectorAll(".edit-button");
-  const saveButton = transactionForm.querySelector(".save-btn");
 
-  // <----------------------------- Show Error Msgs Function ------------------------->
   const showErrorMessages = (errors) => {
     errorMsgContainer.innerHTML = "";
     errors.forEach((error) => {
@@ -22,13 +20,20 @@ document.addEventListener("DOMContentLoaded", () => {
     errorMsgContainer.classList.remove("hidden");
   };
 
-  // <----------------------------- Edit Transaction Function ------------------------->
   const editTransaction = (e, editButton) => {
     e.preventDefault();
     const transactionId = editButton.dataset.transactionId;
-    const accountId = editButton.dataset.accountId;
+    const url = editButton.getAttribute("href");
+    console.log("href url from edit button : ", url);
+    transactionForm.setAttribute("action", url);
+    transactionForm.dataset.transactionId = transactionId;
+    console.log("transaction form content :", transactionForm);
+    console.log(
+      "edit form actionnn : ",
+      transactionForm.getAttribute("action")
+    );
 
-    console.log("date : ", editButton.dataset.date);
+    console.log("cateogry value to inject : ", editButton.dataset.categoryId);
 
     transactionForm.querySelector('input[name="date"]').value =
       editButton.dataset.date;
@@ -43,42 +48,19 @@ document.addEventListener("DOMContentLoaded", () => {
     transactionForm.querySelector('input[name="inflow"]').value =
       editButton.dataset.inflow;
 
-    const editUrl = transactionForm.dataset.editUrl.replace(
-      "none",
-      transactionId
-    );
-    transactionForm.action = editUrl;
-    console.log("edit button clicked !");
-    console.log("transaction form url : ", editUrl);
-
     formContainer.classList.remove("hidden");
-
-    console.log("form action content : ", transactionForm.action);
-
-    transactionForm.addEventListener("submit", (e) => {
-      saveTransaction(e, transactionForm, editUrl);
-      const transactionRow = document.querySelector(
-        `.table-row[data-transaction-id="${transactionId}"]`
-      );
-      transactionRow.remove();
-    });
-
-    cancelBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      formContainer.classList.add("hidden");
-      errorMsgContainer.classList.add("hidden");
-      errorMsgContainer.innerHTML = "";
-      transactionForm.reset();
-      errorMsgContainer.classList.add("hidden");
-      // workingBalanceElement.textContent = workingBalance;
-    });
   };
 
-  const saveTransaction = (e, transactionForm, url) => {
+  const saveTransaction = (e, transactionForm) => {
     e.preventDefault();
+    console.log("Save button clickeeeed!!!");
 
     const formData = new FormData(transactionForm);
     const formValues = Object.fromEntries(formData.entries());
+    const url = transactionForm.getAttribute("action");
+
+    console.log("transaction form url :", url);
+    console.log("form values sent by user :", formValues);
 
     fetch(url, {
       method: "POST",
@@ -99,17 +81,26 @@ document.addEventListener("DOMContentLoaded", () => {
           const date = new Date(data.transaction.date);
           const workingBalance = data.working_balance;
           const formattedDate = date.toLocaleString("fr-FR");
+          transactionForm.querySelector('input[name="date"]').value =
+            formattedDate;
+
           const newTransactionRow = tableBody.insertRow(0);
           newTransactionRow.classList.add(
             "table-row",
             "border-b",
             "border-gray-200"
           );
+
+          console.log(
+            "data transaction category before insertionnn in new roow :",
+            data.transaction.category.id
+          );
+
           newTransactionRow.dataset.transactionId = data.transaction.id;
           newTransactionRow.innerHTML = `
             <td class="py-4 px-3 pl-4 font-medium text-gray-900">${formattedDate}</td>
             <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.payee}</td>
-            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.category}</td>
+            <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.category.name}</td>
             <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.memo}</td>
             <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.outflow}</td>
             <td class="py-4 px-3 pl-4 font-medium text-gray-500">${data.transaction.inflow}</td>
@@ -120,7 +111,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 </svg>
               </a>
 
-              <a class="edit-button inline-block pl-4" data-transaction-id="${data.transaction.id}" data-account-id="${accountId}" data-date="${formattedDate}" data-payee="${data.transaction.payee}" data-category-id="${data.transaction.category}" data-memo="${data.transaction.memo}" data-outflow="${data.transaction.outflow}" data-inflow="${data.transaction.inflow}">
+              <a class="edit-button inline-block pl-4" data-transaction-id="${data.transaction.id}" data-account-id="${accountId}" data-date="${formattedDate}" data-payee="${data.transaction.payee}" data-category-id="${data.transaction.category.id}" data-memo="${data.transaction.memo}" data-outflow="${data.transaction.outflow}" data-inflow="${data.transaction.inflow}" href="${url}">
+
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                 </svg>
@@ -141,13 +133,19 @@ document.addEventListener("DOMContentLoaded", () => {
           transactionForm.reset();
           errorMsgContainer.classList.add("hidden");
           workingBalanceElement.textContent = workingBalance;
+
+          if (url.includes("edit")) {
+            const transactionId = transactionForm.dataset.transactionId;
+            const editedTransactionRow = document.querySelector(
+              `.table-row[data-transaction-id="${transactionId}"]`
+            );
+            editedTransactionRow.remove();
+          }
         } else {
           showErrorMessages(data.errors);
         }
       });
   };
-
-  // <----------------------------- Delete Transaction Function ------------------------->
 
   const deleteTransaction = (e, deleteButton) => {
     e.preventDefault();
@@ -181,7 +179,17 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   };
 
-  // <-------------------------------------------------------------------------->
+  transactionForm.addEventListener("submit", (e) => {
+    saveTransaction(e, transactionForm);
+  });
+
+  cancelBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    formContainer.classList.add("hidden");
+    errorMsgContainer.classList.add("hidden");
+    errorMsgContainer.innerHTML = "";
+    transactionForm.reset();
+  });
 
   editButtons.forEach((button) => {
     button.addEventListener("click", (e) => {
@@ -196,21 +204,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   addTransactionBtn.addEventListener("click", () => {
+    createUrl = transactionForm.dataset.createUrl;
+    transactionForm.setAttribute("action", createUrl);
+    console.log("create action urrrrrl :", createUrl);
     formContainer.classList.remove("hidden");
-
-    const createUrl = transactionForm.dataset.createUrl;
-    transactionForm.action = createUrl;
-
-    transactionForm.addEventListener("submit", (e) => {
-      saveTransaction(e, transactionForm, createUrl);
-      console.log("create url :", createUrl);
-    });
-
-    cancelBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      formContainer.classList.add("hidden");
-      errorMsgContainer.classList.add("hidden");
-      errorMsgContainer.innerHTML = "";
-    });
   });
 });
