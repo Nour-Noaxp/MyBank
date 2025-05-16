@@ -106,9 +106,9 @@ def transaction_create_view(request, account_id):
                 "working_balance": account.working_balance,
             }
             if transaction.category:
-                data["transaction"]["category"] = str(transaction.category)
+                data["transaction"]["category"] = model_to_dict(transaction.category)
             else:
-                data["transaction"]["category"] = ""
+                data["transaction"]["category"] = None
 
             return JsonResponse(data)
 
@@ -151,9 +151,11 @@ def transaction_edit_view(request, account_id, transaction_id):
             }
 
             if new_transaction.category:
-                data["transaction"]["category"] = str(new_transaction.category)
+                data["transaction"]["category"] = model_to_dict(
+                    new_transaction.category
+                )
             else:
-                data["transaction"]["category"] = ""
+                data["transaction"]["category"] = None
 
             return JsonResponse(data)
 
