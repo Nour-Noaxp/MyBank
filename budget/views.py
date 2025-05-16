@@ -106,15 +106,10 @@ def transaction_create_view(request, account_id):
                 "working_balance": account.working_balance,
             }
             if transaction.category:
-                data["transaction"]["category"] = {
-                    "id": transaction.category.id,
-                    "name": str(transaction.category),
-                }
+                data["transaction"]["category"] = str(transaction.category)
             else:
-                data["transaction"]["category"] = {
-                    "id": None,
-                    "name": "",
-                }
+                data["transaction"]["category"] = ""
+
             return JsonResponse(data)
 
         except ValidationError as ve:
@@ -156,15 +151,9 @@ def transaction_edit_view(request, account_id, transaction_id):
             }
 
             if new_transaction.category:
-                data["transaction"]["category"] = {
-                    "id": new_transaction.category.id,
-                    "name": str(new_transaction.category),
-                }
+                data["transaction"]["category"] = str(new_transaction.category)
             else:
-                data["transaction"]["category"] = {
-                    "id": None,
-                    "name": "",
-                }
+                data["transaction"]["category"] = ""
 
             return JsonResponse(data)
 
