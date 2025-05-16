@@ -105,7 +105,11 @@ def transaction_create_view(request, account_id):
                 "transaction": model_to_dict(transaction),
                 "working_balance": account.working_balance,
             }
-            data["transaction"]["category"] = str(transaction.category)
+            if transaction.category:
+                data["transaction"]["category"] = model_to_dict(transaction.category)
+            else:
+                data["transaction"]["category"] = None
+
             return JsonResponse(data)
 
         except ValidationError as ve:
@@ -114,7 +118,54 @@ def transaction_create_view(request, account_id):
                 {"success": False, "errors": pretty_errors},
             )
     return JsonResponse(
-        {"success": False, "message": "Error while receiving data in transaction view"},
+        {"success": False, "message": "Error with request method"},
+        status=400,
+    )
+
+
+def transaction_edit_view(request, account_id, transaction_id):
+    account = get_object_or_404(Account, pk=account_id)
+    transaction = get_object_or_404(
+        Transaction, pk=transaction_id, account_id=account_id
+    )
+    if request.method == "POST":
+        try:
+            fetch_data = json.loads(request.body)
+            new_transaction = Transaction(
+                account=account,
+                date=fetch_data.get("date"),
+                payee=fetch_data.get("payee"),
+                category_id=fetch_data.get("category_id") or None,
+                memo=fetch_data.get("memo"),
+                outflow=fetch_data.get("outflow") or 0,
+                inflow=fetch_data.get("inflow") or 0,
+            )
+            new_transaction.save()
+            transaction.delete()
+            account.refresh_from_db()
+
+            data = {
+                "success": True,
+                "transaction": model_to_dict(new_transaction),
+                "working_balance": account.working_balance,
+            }
+
+            if new_transaction.category:
+                data["transaction"]["category"] = model_to_dict(
+                    new_transaction.category
+                )
+            else:
+                data["transaction"]["category"] = None
+
+            return JsonResponse(data)
+
+        except ValidationError as ve:
+            pretty_errors = Transaction.get_pretty_errors(ve.message_dict)
+            return JsonResponse(
+                {"success": False, "errors": pretty_errors},
+            )
+    return JsonResponse(
+        {"success": False, "message": "Error with request method"},
         status=400,
     )
 
@@ -139,7 +190,7 @@ def transaction_delete_view(request, account_id, transaction_id):
                 {"success": False, "errors": ve.message_dict},
             )
     return JsonResponse(
-        {"success": False, "errors": "Error while receiving data in transaction view"},
+        {"success": False, "errors": "Error whith request method"},
         status=400,
     )
 

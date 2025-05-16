@@ -2,7 +2,7 @@
 <input type="button" value="Add Transaction" class="add-transaction-btn border rounded-md bg-indigo-600 px-4 py-2 mb-2 font-semibold text-white hover:bg-indigo-500"/>
 <div class="error-message-container hidden"></div>
 <div class="form-container hidden rounded-xl bg-indigo-100 p-2 px-4 mb-1 ">
-  <form action="{% url "transaction-create" account_id=account.id %}" method="POST" class="transaction-form" data-account-id="{{ account.id }}" data-csrf-token="{{ csrf_token }}">
+  <form action="{% url "transaction-create" account_id=account.id %}" method="POST" class="transaction-form" data-account-id="{{ account.id }}" data-create-url="{% url "transaction-create" account_id=account.id %}" data-csrf-token="{{ csrf_token }}">
     {% csrf_token %}
     <div class="flex pt-2">
       <div class="flex flex-col w-full">
