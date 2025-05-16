@@ -1,24 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const {
-    formContainer,
-    transactionForm,
-    addTransactionBtn,
-    cancelBtn,
-    errorMsgContainer,
-    workingBalanceElement,
-    deleteButtons,
-    editButtons,
-  } = {
-    formContainer: document.querySelector(".form-container"),
-    transactionForm: document.querySelector(".transaction-form"),
-    addTransactionBtn: document.querySelector(".add-transaction-btn"),
-    cancelBtn: document.querySelector(".cancel-btn"),
-    errorMsgContainer: document.querySelector(".error-message-container"),
-    workingBalanceElement: document.querySelector(".working-balance"),
-    deleteButtons: document.querySelectorAll(".delete-button"),
-    editButtons: document.querySelectorAll(".edit-button"),
-  };
-
+  const formContainer = document.querySelector(".form-container");
+  const transactionForm = document.querySelector(".transaction-form");
+  const addTransactionBtn = document.querySelector(".add-transaction-btn");
+  const cancelBtn = document.querySelector(".cancel-btn");
+  const errorMsgContainer = document.querySelector(".error-message-container");
+  const workingBalanceElement = document.querySelector(".working-balance");
+  const deleteButtons = document.querySelectorAll(".delete-button");
+  const editButtons = document.querySelectorAll(".edit-button");
   const { accountId, csrfToken } = transactionForm.dataset;
 
   const showErrorMessages = (errors) => {
@@ -30,6 +18,13 @@ document.addEventListener("DOMContentLoaded", () => {
       errorMsgContainer.appendChild(divError);
     });
     errorMsgContainer.classList.remove("hidden");
+  };
+
+  const clearErrorsAndCloseForm = () => {
+    errorMsgContainer.innerHTML = "";
+    errorMsgContainer.classList.add("hidden");
+    transactionForm.reset();
+    formContainer.classList.add("hidden");
   };
 
   const editTransaction = (e, editButton) => {
@@ -144,10 +139,8 @@ document.addEventListener("DOMContentLoaded", () => {
             deleteTransaction(e, deleteButton);
           });
 
-          transactionForm.reset();
-          errorMsgContainer.classList.add("hidden");
           workingBalanceElement.textContent = workingBalance;
-          formContainer.classList.add("hidden");
+          clearErrorsAndCloseForm();
 
           if (url.includes("edit")) {
             const editedTransactionRow = document.querySelector(
@@ -205,10 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   cancelBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    formContainer.classList.add("hidden");
-    errorMsgContainer.classList.add("hidden");
-    errorMsgContainer.innerHTML = "";
-    transactionForm.reset();
+    clearErrorsAndCloseForm();
   });
 
   editButtons.forEach((button) => {
