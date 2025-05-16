@@ -90,6 +90,7 @@ def transaction_create_view(request, account_id):
     if request.method == "POST":
         try:
             fetch_data = json.loads(request.body)
+            print("transaction creation data received to save : ", fetch_data)
             transaction = Transaction(
                 account=account,
                 date=fetch_data.get("date"),
@@ -136,7 +137,7 @@ def transaction_edit_view(request, account_id, transaction_id):
     if request.method == "POST":
         try:
             fetch_data = json.loads(request.body)
-            print("data received from fetch request!!!!!!", fetch_data)
+            print("transaction edition data received to save : ", fetch_data)
 
             new_transaction = Transaction(
                 account=account,
@@ -149,12 +150,15 @@ def transaction_edit_view(request, account_id, transaction_id):
             )
             new_transaction.save()
             transaction.delete()
+            account.refresh_from_db()
 
             data = {
                 "success": True,
                 "transaction": model_to_dict(new_transaction),
                 "working_balance": account.working_balance,
             }
+
+            print("working balance value in view :", data["working_balance"])
 
             if new_transaction.category:
                 data["transaction"]["category"] = {

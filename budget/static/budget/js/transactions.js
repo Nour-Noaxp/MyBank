@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const editTransaction = (e, editButton) => {
     e.preventDefault();
+    console.log("working balance before update :", workingBalanceElement);
     const transactionId = editButton.dataset.transactionId;
     const url = editButton.getAttribute("href");
     console.log("href url from edit button : ", url);
@@ -134,6 +135,11 @@ document.addEventListener("DOMContentLoaded", () => {
           transactionForm.reset();
           errorMsgContainer.classList.add("hidden");
           workingBalanceElement.textContent = workingBalance;
+          console.log("working balance after update :", workingBalanceElement);
+          console.log(
+            "working balance received from view",
+            data.working_balance
+          );
 
           if (url.includes("edit")) {
             const transactionId = transactionForm.dataset.transactionId;
