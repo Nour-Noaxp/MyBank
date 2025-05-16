@@ -29,8 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const editTransaction = (e, editButton) => {
     e.preventDefault();
-    const url = editButton.getAttribute("href");
-    transactionForm.setAttribute("action", url);
+    transactionForm.setAttribute("action", editButton.getAttribute("href"));
     transactionForm.dataset.transactionId = editButton.dataset.transactionId;
     transactionForm.querySelector('input[name="date"]').value =
       editButton.dataset.date;
@@ -191,8 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   addTransactionBtn.addEventListener("click", () => {
-    createUrl = transactionForm.dataset.createUrl;
-    transactionForm.setAttribute("action", createUrl);
+    transactionForm.setAttribute("action", transactionForm.dataset.createUrl);
     formContainer.classList.remove("hidden");
   });
 
