@@ -22,18 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const editTransaction = (e, editButton) => {
     e.preventDefault();
-    console.log("working balance before update :", workingBalanceElement);
     const transactionId = editButton.dataset.transactionId;
     const url = editButton.getAttribute("href");
-    console.log("href url from edit button : ", url);
     transactionForm.setAttribute("action", url);
     transactionForm.dataset.transactionId = transactionId;
-    console.log("transaction form content :", transactionForm);
-    console.log(
-      "edit form actionnn : ",
-      transactionForm.getAttribute("action")
-    );
-    // debugger;
     transactionForm.querySelector('input[name="date"]').value =
       editButton.dataset.date;
     transactionForm.querySelector('input[name="payee"]').value =
@@ -52,14 +44,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const saveTransaction = (e, transactionForm) => {
     e.preventDefault();
-    console.log("Save button clickeeeed!!!");
 
     const formData = new FormData(transactionForm);
     const formValues = Object.fromEntries(formData.entries());
     const url = transactionForm.getAttribute("action");
-
-    console.log("transaction form url :", url);
-    console.log("form values sent by user :", formValues);
 
     fetch(url, {
       method: "POST",
@@ -78,24 +66,16 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.success) {
           const tableBody = document.querySelector(".table-body");
           const date = new Date(data.transaction.date);
-          console.log("date received from view : ", data.transaction.date);
-          console.log("date après l application de new date :", date);
           const workingBalance = data.working_balance;
           const formattedDate = date.toLocaleString("fr-FR");
           transactionForm.querySelector('input[name="date"]').value =
             formattedDate;
-          console.log("formatted date :", formattedDate);
 
           const newTransactionRow = tableBody.insertRow(0);
           newTransactionRow.classList.add(
             "table-row",
             "border-b",
             "border-gray-200"
-          );
-
-          console.log(
-            "data transaction category before insertionnn in new roow :",
-            data.transaction.category.id
           );
 
           newTransactionRow.dataset.transactionId = data.transaction.id;
@@ -135,11 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
           transactionForm.reset();
           errorMsgContainer.classList.add("hidden");
           workingBalanceElement.textContent = workingBalance;
-          console.log("working balance after update :", workingBalanceElement);
-          console.log(
-            "working balance received from view",
-            data.working_balance
-          );
 
           if (url.includes("edit")) {
             const transactionId = transactionForm.dataset.transactionId;
@@ -213,7 +188,6 @@ document.addEventListener("DOMContentLoaded", () => {
   addTransactionBtn.addEventListener("click", () => {
     createUrl = transactionForm.dataset.createUrl;
     transactionForm.setAttribute("action", createUrl);
-    console.log("create action urrrrrl :", createUrl);
     formContainer.classList.remove("hidden");
   });
 });
