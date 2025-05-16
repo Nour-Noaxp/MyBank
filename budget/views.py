@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
@@ -123,7 +123,7 @@ def transaction_create_view(request, account_id):
                 {"success": False, "errors": pretty_errors},
             )
     return JsonResponse(
-        {"success": False, "message": "Error while receiving data in transaction view"},
+        {"success": False, "message": "Error with request method"},
         status=400,
     )
 
@@ -174,7 +174,7 @@ def transaction_edit_view(request, account_id, transaction_id):
                 {"success": False, "errors": pretty_errors},
             )
     return JsonResponse(
-        {"success": False, "message": "Error with your damn post request!!!!"},
+        {"success": False, "message": "Error with request method"},
         status=400,
     )
 
@@ -199,7 +199,7 @@ def transaction_delete_view(request, account_id, transaction_id):
                 {"success": False, "errors": ve.message_dict},
             )
     return JsonResponse(
-        {"success": False, "errors": "Error while receiving data in transaction view"},
+        {"success": False, "errors": "Error whith request method"},
         status=400,
     )
 

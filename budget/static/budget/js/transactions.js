@@ -1,13 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const formContainer = document.querySelector(".form-container");
-  const transactionForm = document.querySelector(".transaction-form");
-  const addTransactionBtn = document.querySelector(".add-transaction-btn");
-  const cancelBtn = document.querySelector(".cancel-btn");
+  const {
+    formContainer,
+    transactionForm,
+    addTransactionBtn,
+    cancelBtn,
+    errorMsgContainer,
+    workingBalanceElement,
+    deleteButtons,
+    editButtons,
+  } = {
+    formContainer: document.querySelector(".form-container"),
+    transactionForm: document.querySelector(".transaction-form"),
+    addTransactionBtn: document.querySelector(".add-transaction-btn"),
+    cancelBtn: document.querySelector(".cancel-btn"),
+    errorMsgContainer: document.querySelector(".error-message-container"),
+    workingBalanceElement: document.querySelector(".working-balance"),
+    deleteButtons: document.querySelectorAll(".delete-button"),
+    editButtons: document.querySelectorAll(".edit-button"),
+  };
+
   const { accountId, csrfToken } = transactionForm.dataset;
-  const errorMsgContainer = document.querySelector(".error-message-container");
-  const workingBalanceElement = document.querySelector(".working-balance");
-  const deleteButtons = document.querySelectorAll(".delete-button");
-  const editButtons = document.querySelectorAll(".edit-button");
 
   const showErrorMessages = (errors) => {
     errorMsgContainer.innerHTML = "";
@@ -68,10 +80,8 @@ document.addEventListener("DOMContentLoaded", () => {
           const date = new Date(data.transaction.date);
           const workingBalance = data.working_balance;
           const formattedDate = date.toLocaleString("fr-FR");
-          transactionForm.querySelector('input[name="date"]').value =
-            formattedDate;
-
           const newTransactionRow = tableBody.insertRow(0);
+
           newTransactionRow.classList.add(
             "table-row",
             "border-b",
@@ -92,9 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
                 </svg>
               </a>
-
               <a class="edit-button inline-block pl-4" data-transaction-id="${data.transaction.id}" data-account-id="${accountId}" data-date="${data.transaction.date}" data-payee="${data.transaction.payee}" data-category-id="${data.transaction.category.id}" data-memo="${data.transaction.memo}" data-outflow="${data.transaction.outflow}" data-inflow="${data.transaction.inflow}" href="/accounts/${accountId}/transactions/${data.transaction.id}/edit">
-
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                   <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                 </svg>
@@ -115,11 +123,11 @@ document.addEventListener("DOMContentLoaded", () => {
           transactionForm.reset();
           errorMsgContainer.classList.add("hidden");
           workingBalanceElement.textContent = workingBalance;
+          formContainer.classList.add("hidden");
 
           if (url.includes("edit")) {
-            const transactionId = transactionForm.dataset.transactionId;
             const editedTransactionRow = document.querySelector(
-              `.table-row[data-transaction-id="${transactionId}"]`
+              `.table-row[data-transaction-id="${transactionForm.dataset.transactionId}"]`
             );
             editedTransactionRow.remove();
           }
@@ -165,6 +173,12 @@ document.addEventListener("DOMContentLoaded", () => {
     saveTransaction(e, transactionForm);
   });
 
+  addTransactionBtn.addEventListener("click", () => {
+    createUrl = transactionForm.dataset.createUrl;
+    transactionForm.setAttribute("action", createUrl);
+    formContainer.classList.remove("hidden");
+  });
+
   cancelBtn.addEventListener("click", (e) => {
     e.preventDefault();
     formContainer.classList.add("hidden");
@@ -183,11 +197,5 @@ document.addEventListener("DOMContentLoaded", () => {
     button.addEventListener("click", (e) => {
       deleteTransaction(e, button);
     });
-  });
-
-  addTransactionBtn.addEventListener("click", () => {
-    createUrl = transactionForm.dataset.createUrl;
-    transactionForm.setAttribute("action", createUrl);
-    formContainer.classList.remove("hidden");
   });
 });
