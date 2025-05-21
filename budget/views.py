@@ -13,6 +13,10 @@ def dashboard_view(request):
     categories = Category.objects.filter(budget=budget)
     ready_to_assign = budget.ready_to_assign
     data_categories = Category.auto_assign()
+    nbr_fully_fundable_categories = len(data_categories["fully_fundable_categories"])
+    nbr_partially_fundable_category = len(
+        data_categories["partially_fundable_category"]
+    )
     return render(
         request,
         "dashboard.html",
@@ -20,6 +24,8 @@ def dashboard_view(request):
             "categories": categories,
             "ready_to_assign": ready_to_assign,
             "data_categories": data_categories,
+            "nbr_fully_fundable_categories": nbr_fully_fundable_categories,
+            "nbr_partially_fundable_category": nbr_partially_fundable_category,
         },
     )
 
@@ -44,10 +50,25 @@ def budget_assign_view(request):
 
 def budget_auto_assign_view(request):
     budget = Budget.objects.first()
+    ready_to_assign = budget.ready_to_assign
     data_categories = Category.auto_assign()
     if request.method == "GET":
         print("post request received!")
-        return HttpResponse(f"categories data: {data_categories}")
+        if data_categories["fully_fundable_categories"]:
+            for category in data_categories["fully_fundable_categories"]:
+                ready_to_assign += category.available
+                category.available -= category.available
+                category.save()
+        if data_categories["partially_fundable_category"]:
+            category = data_categories["partially_fundable_category"][0]
+            category.available += ready_to_assign
+            ready_to_assign -= ready_to_assign
+            category.save()
+
+        budget.ready_to_assign = ready_to_assign
+        budget.save()
+
+        # return HttpResponse(f"categories data: {data_categories}")
     return redirect("dashboard")
 
 
