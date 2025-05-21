@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Sum
 from django.core.exceptions import ValidationError
 
 
@@ -42,6 +43,37 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def auto_assign(cls):
+        ready_to_assign = Budget.objects.first().ready_to_assign
+        underfunded_categories_qs = Category.objects.filter(available__lt=0).order_by(
+            "-available"
+        )
+        underfunded_categories = list(underfunded_categories_qs)
+        total_to_fund = -underfunded_categories_qs.aggregate(total=Sum("available"))[
+            "total"
+        ]
+        fully_fundable_categories = []
+        partially_fundable_categories = []
+
+        while ready_to_assign > 0 and underfunded_categories:
+            category = underfunded_categories.pop(0)
+            amount_to_fund = -category.available
+            if ready_to_assign >= amount_to_fund:
+                fully_fundable_categories.append(category)
+                ready_to_assign -= amount_to_fund
+            else:
+                partially_fundable_categories.append(category)
+                ready_to_assign -= ready_to_assign
+                break
+
+        return {
+            "underfunded_categories": list(underfunded_categories_qs),
+            "total_to_fund": total_to_fund,
+            "fully_fundable_categories": fully_fundable_categories,
+            "partially_fundable_categories": partially_fundable_categories,
+        }
 
 
 class Transaction(models.Model):
