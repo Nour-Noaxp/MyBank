@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
@@ -12,10 +12,15 @@ def dashboard_view(request):
     budget = Budget.objects.first()
     categories = Category.objects.filter(budget=budget)
     ready_to_assign = budget.ready_to_assign
+    data_categories = Category.auto_assign()
     return render(
         request,
         "dashboard.html",
-        {"categories": categories, "ready_to_assign": ready_to_assign},
+        {
+            "categories": categories,
+            "ready_to_assign": ready_to_assign,
+            "data_categories": data_categories,
+        },
     )
 
 
@@ -34,6 +39,15 @@ def budget_assign_view(request):
         )
         return redirect("dashboard")
     messages.error(request, "Invalid data, please verify the amount and category")
+    return redirect("dashboard")
+
+
+def budget_auto_assign_view(request):
+    budget = Budget.objects.first()
+    data_categories = Category.auto_assign()
+    if request.method == "GET":
+        print("post request received!")
+        return HttpResponse(f"categories data: {data_categories}")
     return redirect("dashboard")
 
 

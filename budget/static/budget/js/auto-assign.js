@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   assignMoney.addEventListener("click", (e) => {
-    e.preventDefault();
     assignModal.classList.add("hidden");
   });
 });

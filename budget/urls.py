@@ -5,6 +5,11 @@ urlpatterns = [
     path("", views.dashboard_view, name="dashboard"),
     path("homepage", views.dashboard_view, name="dashboard"),
     path("dashboard/assign", views.budget_assign_view, name="dashboard-assign"),
+    path(
+        "dashboard/auto-assign",
+        views.budget_auto_assign_view,
+        name="budget-auto-assign",
+    ),
     path("dashboard", views.dashboard_view, name="dashboard"),
     path("accounts", views.accounts_list_view, name="accounts-list"),
     path("accounts/new", views.account_create_view, name="account-create"),

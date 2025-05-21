@@ -55,7 +55,7 @@ class Category(models.Model):
             "total"
         ]
         fully_fundable_categories = []
-        partially_fundable_categories = []
+        partially_fundable_category = []
 
         while ready_to_assign > 0 and underfunded_categories:
             category = underfunded_categories.pop(0)
@@ -64,7 +64,7 @@ class Category(models.Model):
                 fully_fundable_categories.append(category)
                 ready_to_assign -= amount_to_fund
             else:
-                partially_fundable_categories.append(category)
+                partially_fundable_category.append(category)
                 ready_to_assign -= ready_to_assign
                 break
 
@@ -72,7 +72,7 @@ class Category(models.Model):
             "underfunded_categories": list(underfunded_categories_qs),
             "total_to_fund": total_to_fund,
             "fully_fundable_categories": fully_fundable_categories,
-            "partially_fundable_categories": partially_fundable_categories,
+            "partially_fundable_category": partially_fundable_category,
         }
 
 
