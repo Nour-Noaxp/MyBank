@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
@@ -64,9 +64,13 @@ def budget_auto_assign_view(request):
             category.available += ready_to_assign
             ready_to_assign -= ready_to_assign
             category.save()
-
         budget.ready_to_assign = ready_to_assign
         budget.save()
+        return redirect("dashboard")
+    messages.error(
+        request,
+        "Invalid request method. Please contact support if the problem persists.",
+    )
     return redirect("dashboard")
 
 
