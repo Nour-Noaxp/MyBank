@@ -47,6 +47,7 @@ class Category(models.Model):
     @classmethod
     def auto_assign(cls):
         ready_to_assign = Budget.objects.first().ready_to_assign
+        remaining_budget_for_partial_assign = 0
         underfunded_categories_qs = Category.objects.filter(available__lt=0).order_by(
             "-available"
         )
@@ -65,6 +66,7 @@ class Category(models.Model):
                 ready_to_assign -= amount_to_fund
             else:
                 partially_fundable_category.append(category)
+                remaining_budget_for_partial_assign = ready_to_assign
                 ready_to_assign -= ready_to_assign
                 break
 
@@ -73,6 +75,7 @@ class Category(models.Model):
             "total_to_fund": total_to_fund,
             "fully_fundable_categories": fully_fundable_categories,
             "partially_fundable_category": partially_fundable_category,
+            "remaining_budget_for_partial_assign": remaining_budget_for_partial_assign,
         }
 
 

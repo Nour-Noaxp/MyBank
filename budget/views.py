@@ -67,8 +67,6 @@ def budget_auto_assign_view(request):
 
         budget.ready_to_assign = ready_to_assign
         budget.save()
-
-        # return HttpResponse(f"categories data: {data_categories}")
     return redirect("dashboard")
 
 

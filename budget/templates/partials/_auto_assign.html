@@ -29,7 +29,7 @@
           <div class="flex justify-between gap-2 mx-8 px-2 my-4">
             {% with category=data_categories.partially_fundable_category.0 %}
               <div class="category font-semibold">{{ category }}</div>
-              <div class="amount">+{{ category.available|cut:"-" }}€</div>
+              <div class="amount">+{{ data_categories.remaining_budget_for_partial_assign }}€</div>
             {% endwith %}
           </div>
         {% endif %}
