@@ -1,0 +1,59 @@
+<div class="assign-modal hidden bg-black fixed inset-0 bg-opacity-40 flex justify-center items-center z-50">
+  <div class="bg-white rounded-xl flex flex-col justify-center items-center p-4 h-auto w-2/5 space-y-4">
+    {% if data_categories.underfunded_categories and ready_to_assign == 0 %}
+      <h2 class="modal-header border-b border-gray-300 pb-2 text-lg w-full font-semibold">Not Enough Money</h2>
+      <div class="modal-content w-full">
+        <div class="message mb-2">
+          <p class="partial-categories-message py-1">You assigned all of your money already—there isn’t any left for your underfunded categories.<br><br>
+            This is ok! Prioritize by moving money from less important categories to more important ones.<br><br>
+            When you receive more income, fund your plan the rest of the way by using Underfunded again.
+          </p>
+        </div>
+        <div class="modal-bottom pt-2 border-t border-gray-300 w-full flex justify-end space-x-2">
+          <button class="close-modal text-white bg-indigo-600 rounded-xl px-4 py-2 font-semibold">Ok</button>
+        </div>
+    {% endif %}
+    {% if data_categories.underfunded_categories and ready_to_assign > 0 %}
+      <h2 class="modal-header border-b border-gray-300 pb-2 text-lg w-full font-semibold">Auto-Assign Preview: Underfunded</h2>
+      <div class="modal-content w-full">
+        {% if nbr_partially_fundable_category > 0 %}
+          <div class="partial-category-message rounded-xl bg-yellow-100 p-2 flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 flex-shrink-0">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 1 0 7.5 7.5h-7.5V6Z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0 0 13.5 3v7.5Z" />
+            </svg>
+            <div class="message">
+              <p class="partial-categories-message py-1">You don’t have enough money to fully fund all of your categories.<span class="font-semibold"> {{ nbr_partially_fundable_category }} category</span> will be partially funded.</p>
+            </div>
+          </div>
+          <div class="flex justify-between gap-2 mx-8 px-2 my-4">
+            {% with category=data_categories.partially_fundable_category.0 %}
+              <div class="category font-semibold">{{ category }}</div>
+              <div class="amount">+{{ category.available }}€</div>
+            {% endwith %}
+          </div>
+        {% endif %}
+        {% if nbr_fully_fundable_categories > 0 %}
+          <div class="full-categories-message rounded-xl bg-green-200 p-2 flex items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            <div class="message">
+              <p class="full-categories-message py-1"><span class="font-semibold">{{ nbr_fully_fundable_categories }} categories</span> will be fully funded.</p>
+            </div>
+          </div>
+          <div class="flex justify-between gap-2 mx-8 px-2 my-4">
+            {% for category in data_categories.fully_fundable_categories %}
+              <div class="category font-semibold">{{ category }}</div>
+              <div class="amount">+{{ category.available }}€</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      <div class="modal-bottom pt-2 border-t border-gray-300 w-full flex justify-end space-x-2">
+        <button class="close-modal text-indigo-600 bg-indigo-100 rounded-xl px-4 py-2 font-semibold">Cancel</button>
+        <a href="{% url "budget-auto-assign" %}" class="assign-button text-white bg-indigo-600 rounded-xl px-4 py-2 font-semibold">Assign Money</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
