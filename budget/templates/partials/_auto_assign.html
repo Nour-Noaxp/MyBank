@@ -29,7 +29,7 @@
           <div class="flex justify-between gap-2 mx-8 px-2 my-4">
             {% with category=data_categories.partially_fundable_category.0 %}
               <div class="category font-semibold">{{ category }}</div>
-              <div class="amount">+{{ category.available }}€</div>
+              <div class="amount">+{{ category.available|cut:"-" }}€</div>
             {% endwith %}
           </div>
         {% endif %}
@@ -42,10 +42,12 @@
               <p class="full-categories-message py-1"><span class="font-semibold">{{ nbr_fully_fundable_categories }} categories</span> will be fully funded.</p>
             </div>
           </div>
-          <div class="flex justify-between gap-2 mx-8 px-2 my-4">
+          <div class="flex flex-col justify-between gap-2 mx-8 px-2 my-4">
             {% for category in data_categories.fully_fundable_categories %}
+            <div class="flex justify-between">
               <div class="category font-semibold">{{ category }}</div>
-              <div class="amount">+{{ category.available }}€</div>
+              <div class="amount">+{{ category.available|cut:"-" }}€</div>
+            </div>
             {% endfor %}
           </div>
         {% endif %}
