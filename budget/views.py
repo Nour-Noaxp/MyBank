@@ -12,10 +12,10 @@ def dashboard_view(request):
     budget = Budget.objects.first()
     categories = Category.objects.filter(budget=budget)
     ready_to_assign = budget.ready_to_assign
-    data_categories = Category.auto_assign()
-    nbr_fully_fundable_categories = len(data_categories["fully_fundable_categories"])
-    nbr_partially_fundable_category = len(
-        data_categories["partially_fundable_category"]
+    auto_assign_data = Category.auto_assign()
+    nbr_fully_fundable_categories = len(auto_assign_data["fully_fundable_categories"])
+    nbr_partially_fundable_categories = len(
+        auto_assign_data["partially_fundable_categories"]
     )
     return render(
         request,
@@ -23,9 +23,9 @@ def dashboard_view(request):
         {
             "categories": categories,
             "ready_to_assign": ready_to_assign,
-            "data_categories": data_categories,
+            "auto_assign_data": auto_assign_data,
             "nbr_fully_fundable_categories": nbr_fully_fundable_categories,
-            "nbr_partially_fundable_category": nbr_partially_fundable_category,
+            "nbr_partially_fundable_categories": nbr_partially_fundable_categories,
         },
     )
 
@@ -51,17 +51,18 @@ def budget_assign_view(request):
 def budget_auto_assign_view(request):
     budget = Budget.objects.first()
     ready_to_assign = budget.ready_to_assign
-    data_categories = Category.auto_assign()
-    if data_categories["fully_fundable_categories"]:
-        for category in data_categories["fully_fundable_categories"]:
-            ready_to_assign += category.available
-            category.available -= category.available
-            category.save()
-    if data_categories["partially_fundable_category"]:
-        category = data_categories["partially_fundable_category"][0]
+    auto_assign_data = Category.auto_assign()
+
+    for category in auto_assign_data["fully_fundable_categories"]:
+        ready_to_assign += category.available
+        category.available -= category.available
+        category.save()
+
+    for category in auto_assign_data["partially_fundable_categories"]:
         category.available += ready_to_assign
         ready_to_assign -= ready_to_assign
         category.save()
+
     budget.ready_to_assign = ready_to_assign
     budget.save()
     return redirect("dashboard")

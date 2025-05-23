@@ -48,12 +48,12 @@
         <div class="auto-assign-body bg-white rounded-b-xl p-6">
           <div class="underfunded-bloc bg-zinc-200 m-2 py-2 px-4 rounded-xl flex justify-between cursor-pointer">
             <h3 class="title text-blue-600 font-semibold">Underfunded</h3>
-            <div class="amount text-blue-600 font-semibold">{{ data_categories.total_to_fund }}€</div>
+            <div class="amount text-blue-600 font-semibold">{{ auto_assign_data.total_to_fund }}€</div>
           </div>
         </div>
       </section>
     </div>
-    {% include "partials/_auto_assign.html" with ready_to_assign=ready_to_assign data_categories=data_categories nbr_partially_fundable_category=nbr_partially_fundable_category nbr_fully_fundable_categories=nbr_fully_fundable_categories %}
+    {% include "partials/_auto_assign.html" with ready_to_assign=ready_to_assign auto_assign_data=auto_assign_data nbr_partially_fundable_categories=nbr_partially_fundable_categories nbr_fully_fundable_categories=nbr_fully_fundable_categories %}
     <script src="{% static "budget/js/auto-assign.js" %}"></script>
   {% endblock %}
 </div>
