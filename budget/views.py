@@ -52,24 +52,18 @@ def budget_auto_assign_view(request):
     budget = Budget.objects.first()
     ready_to_assign = budget.ready_to_assign
     data_categories = Category.auto_assign()
-    if request.method == "GET":
-        if data_categories["fully_fundable_categories"]:
-            for category in data_categories["fully_fundable_categories"]:
-                ready_to_assign += category.available
-                category.available -= category.available
-                category.save()
-        if data_categories["partially_fundable_category"]:
-            category = data_categories["partially_fundable_category"][0]
-            category.available += ready_to_assign
-            ready_to_assign -= ready_to_assign
+    if data_categories["fully_fundable_categories"]:
+        for category in data_categories["fully_fundable_categories"]:
+            ready_to_assign += category.available
+            category.available -= category.available
             category.save()
-        budget.ready_to_assign = ready_to_assign
-        budget.save()
-        return redirect("dashboard")
-    messages.error(
-        request,
-        "Invalid request method. Please contact support if the problem persists.",
-    )
+    if data_categories["partially_fundable_category"]:
+        category = data_categories["partially_fundable_category"][0]
+        category.available += ready_to_assign
+        ready_to_assign -= ready_to_assign
+        category.save()
+    budget.ready_to_assign = ready_to_assign
+    budget.save()
     return redirect("dashboard")
 
 
