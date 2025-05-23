@@ -12,10 +12,21 @@ def dashboard_view(request):
     budget = Budget.objects.first()
     categories = Category.objects.filter(budget=budget)
     ready_to_assign = budget.ready_to_assign
+    data_categories = Category.auto_assign()
+    nbr_fully_fundable_categories = len(data_categories["fully_fundable_categories"])
+    nbr_partially_fundable_category = len(
+        data_categories["partially_fundable_category"]
+    )
     return render(
         request,
         "dashboard.html",
-        {"categories": categories, "ready_to_assign": ready_to_assign},
+        {
+            "categories": categories,
+            "ready_to_assign": ready_to_assign,
+            "data_categories": data_categories,
+            "nbr_fully_fundable_categories": nbr_fully_fundable_categories,
+            "nbr_partially_fundable_category": nbr_partially_fundable_category,
+        },
     )
 
 
@@ -34,6 +45,25 @@ def budget_assign_view(request):
         )
         return redirect("dashboard")
     messages.error(request, "Invalid data, please verify the amount and category")
+    return redirect("dashboard")
+
+
+def budget_auto_assign_view(request):
+    budget = Budget.objects.first()
+    ready_to_assign = budget.ready_to_assign
+    data_categories = Category.auto_assign()
+    if data_categories["fully_fundable_categories"]:
+        for category in data_categories["fully_fundable_categories"]:
+            ready_to_assign += category.available
+            category.available -= category.available
+            category.save()
+    if data_categories["partially_fundable_category"]:
+        category = data_categories["partially_fundable_category"][0]
+        category.available += ready_to_assign
+        ready_to_assign -= ready_to_assign
+        category.save()
+    budget.ready_to_assign = ready_to_assign
+    budget.save()
     return redirect("dashboard")
 
 

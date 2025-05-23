@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
-{% block content %}
-  <div class="flex flex-col">
-    <div class="flex items-center justify-between bg-green-200 border-b rounded-xl p-3 w-60 mb-3 mx-auto relative">
+<div class="flex flex-col">
+  {% block navbar_extra %}
+    <div class="flex items-center justify-between bg-green-200 border-b rounded-xl p-3 w-60 my-3 mx-auto relative">
       <div>
         <div class="font-bold">{{ ready_to_assign }}€</div>
         <p class="text-xs">Ready to Assign</p>
@@ -11,29 +11,49 @@
         <button class ="text-white">Assign</button>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white" class="size-4 self-center">
           <path fill-rule="evenodd" d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-        </svg>        
+        </svg>
       </div>
       {% include "partials/_assign_form.html" with categories=categories %}
     </div>
-    <table class="w-full bg-white rounded-xl overflow-hidden">
-      <thead class="border-b border-gray-300 bg-zinc-200">
-        <tr>
-          <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Category</th>
-          <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Activity</th>
-          <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Available</th>
-          <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Created At</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for category in categories %}
-        <tr class="border-b border-gray-200">
-          <td class="py-4 pr-40 pl-4 text-md/6 font-medium text-gray-900">{{ category.name }}</td>
-          <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.activity }}</td>
-          <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.available }}</td>
-          <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.created_at }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-{% endblock %}
+  {% endblock %}
+  {% block content %}
+    <div class="flex">
+      <table class="w-full bg-white rounded-xl overflow-hidden">
+        <thead class="border-b border-gray-300 bg-zinc-200">
+          <tr>
+            <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Category</th>
+            <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Activity</th>
+            <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Available</th>
+            <th class="py-3.5 pr-3 pl-4 text-left font-bold text-gray-900">Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for category in categories %}
+            <tr class="border-b border-gray-200">
+              <td class="py-4 pr-40 pl-4 text-md/6 font-medium text-gray-900">{{ category.name }}</td>
+              <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.activity }}</td>
+              <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.available }}</td>
+              <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.created_at }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <section class="budget-breakdown rounded-xl ml-4 w-1/3">
+        <header class="auto-assign-header bg-white mb-1 rounded-t-xl p-6 flex">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"/>
+          </svg>
+          <h2 class="font-bold text-gray-900">Auto-Assign</h2>
+        </header>
+        <div class="auto-assign-body bg-white rounded-b-xl p-6">
+          <div class="underfunded-bloc bg-zinc-200 m-2 py-2 px-4 rounded-xl flex justify-between cursor-pointer">
+            <h3 class="title text-blue-600 font-semibold">Underfunded</h3>
+            <div class="amount text-blue-600 font-semibold">{{ data_categories.total_to_fund }}€</div>
+          </div>
+        </div>
+      </section>
+    </div>
+    {% include "partials/_auto_assign.html" with ready_to_assign=ready_to_assign data_categories=data_categories nbr_partially_fundable_category=nbr_partially_fundable_category nbr_fully_fundable_categories=nbr_fully_fundable_categories %}
+    <script src="{% static "budget/js/auto-assign.js" %}"></script>
+  {% endblock %}
+</div>
