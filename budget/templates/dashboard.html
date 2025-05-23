@@ -29,19 +29,19 @@
         </thead>
         <tbody>
           {% for category in categories %}
-          <tr class="border-b border-gray-200">
-            <td class="py-4 pr-40 pl-4 text-md/6 font-medium text-gray-900">{{ category.name }}</td>
-            <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.activity }}</td>
-            <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.available }}</td>
-            <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.created_at }}</td>
-          </tr>
+            <tr class="border-b border-gray-200">
+              <td class="py-4 pr-40 pl-4 text-md/6 font-medium text-gray-900">{{ category.name }}</td>
+              <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.activity }}</td>
+              <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.available }}</td>
+              <td class="py-4 px-3 pl-4 text-md/6 font-medium text-gray-500">{{ category.created_at }}</td>
+            </tr>
           {% endfor %}
         </tbody>
       </table>
       <section class="budget-breakdown rounded-xl ml-4 w-1/3">
         <header class="auto-assign-header bg-white mb-1 rounded-t-xl p-6 flex">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"/>
           </svg>
           <h2 class="font-bold text-gray-900">Auto-Assign</h2>
         </header>

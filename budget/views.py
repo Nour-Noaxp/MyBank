@@ -53,7 +53,6 @@ def budget_auto_assign_view(request):
     ready_to_assign = budget.ready_to_assign
     data_categories = Category.auto_assign()
     if request.method == "GET":
-        print("post request received!")
         if data_categories["fully_fundable_categories"]:
             for category in data_categories["fully_fundable_categories"]:
                 ready_to_assign += category.available
