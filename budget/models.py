@@ -52,9 +52,9 @@ class Category(models.Model):
             "-available"
         )
         underfunded_categories = list(underfunded_categories_qs)
-        total_to_fund = -underfunded_categories_qs.aggregate(total=Sum("available"))[
-            "total"
-        ]
+        total_to_fund = -(
+            underfunded_categories_qs.aggregate(total=Sum("available"))["total"] or 0
+        )
         fully_fundable_categories = []
         partially_fundable_categories = []
 

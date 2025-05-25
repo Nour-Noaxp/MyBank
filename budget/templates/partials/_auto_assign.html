@@ -1,5 +1,24 @@
 <div class="assign-modal hidden bg-black fixed inset-0 bg-opacity-40 flex justify-center items-center z-50">
   <div class="bg-white rounded-xl flex flex-col justify-center items-center p-4 h-auto w-2/5 space-y-4">
+    {% if not auto_assign_data.underfunded_categories %}
+      <h2 class="modal-header border-b border-gray-300 pb-2 text-lg w-full font-semibold">Auto-Assign Preview: Underfunded</h2>
+      <div class="full-categories-message w-full rounded-xl bg-green-200 p-2 flex items-center space-x-2">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+        </svg>
+        <div class="message">
+          <p class="fully-funded-message py-1">You have already fully funded your categories.</p>
+        </div>
+      </div>
+      <div class="modal-content w-full">
+        <div class="message">
+          <p class="partial-categories-message py-1">This is a good thing! You can auto-assign money to a future underfunded category or assign now more money manually.</p>
+        </div>
+      </div>
+      <div class="modal-bottom pt-2 border-t border-gray-300 w-full flex justify-end space-x-2">
+        <button class="close-modal text-white bg-indigo-600 rounded-xl px-4 py-2 font-semibold">Ok</button>
+      </div>
+    {% endif %}
     {% if auto_assign_data.underfunded_categories and ready_to_assign == 0 %}
       <h2 class="modal-header border-b border-gray-300 pb-2 text-lg w-full font-semibold">Not Enough Money</h2>
       <div class="modal-content w-full">
