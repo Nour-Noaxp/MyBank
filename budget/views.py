@@ -68,6 +68,10 @@ def budget_auto_assign_view(request):
     return redirect("dashboard")
 
 
+def reports_view(request):
+    return render(request, "reports.html")
+
+
 def account_create_view(request):
     form = AccountForm
     budget = Budget.objects.first()
