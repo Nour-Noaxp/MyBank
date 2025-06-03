@@ -76,6 +76,39 @@ class Category(models.Model):
             "remaining_budget_for_partial_assign": remaining_budget_for_partial_assign,
         }
 
+    @classmethod
+    def reports_data(cls):
+        spending_data = {}
+        spending_per_category = {}
+        spending_percentage_per_category = {}
+        total_spending = 0
+        average_spending = 1
+
+        for category in Category.objects.all():
+            if category.transaction_set.exists():
+                spending_per_category[category.name] = (
+                    category.transaction_set.aggregate(Sum("outflow"))["outflow__sum"]
+                )
+
+        total_spending = sum(spending_per_category.values())
+
+        if len(spending_per_category) > 0:
+            average_spending = total_spending / len(spending_per_category)
+
+        for category in spending_per_category:
+            spending_percentage_per_category[category] = (
+                spending_per_category[category] * 100 / total_spending
+            )
+
+        spending_data["spending_per_category"] = spending_per_category
+        spending_data["spending_percentage_per_category"] = (
+            spending_percentage_per_category
+        )
+        spending_data["total_spending"] = total_spending
+        spending_data["average_spending"] = average_spending
+
+        return spending_data
+
 
 class Transaction(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
