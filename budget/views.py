@@ -69,7 +69,8 @@ def budget_auto_assign_view(request):
 
 
 def reports_view(request):
-    return render(request, "reports.html")
+    spending_data = Category.reports_data
+    return render(request, "reports.html", {"spending_data": spending_data})
 
 
 def account_create_view(request):

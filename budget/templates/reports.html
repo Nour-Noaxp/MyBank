@@ -2,4 +2,29 @@
 {% load static %}
 {% block content %}
 <h1>Your spendings per category</h1>
+<div class="reports flex h-screen border-t">
+  <div class="report_graph w-3/4 border-r"></div>
+  <div class="spendings_legend w-1/4">
+    <div class="total_spending text-center border-b py-2">
+      <h1>Total Spending</h1>
+      <span class="font-bold text-xl">{{ spending_data.total_spending }}€</span>
+    </div>
+    <div class="average_spending text-center border-b py-2">
+      <h1>Average Spending</h1>
+      <span class="font-bold text-xl">{{ spending_data.average_spending }}€</span>
+    </div>
+    <div class="spending_per_category p-2">
+      <div class="header flex justify-between">
+        <h1 class="font-bold">Categories</h1>
+        <h1 class="font-bold">Spending</h1>
+      </div>
+        {% for category, spending in spending_data.spending_per_category.items %}
+        <div class="flex justify-between">
+          <div class="categories">{{ category }}</div>
+          <div class="spending">{{ spending }}€</div>
+        </div>
+        {% endfor %}
+    </div>
+  </div>
+</div>
 {% endblock %}

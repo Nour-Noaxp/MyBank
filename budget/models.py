@@ -93,11 +93,11 @@ class Category(models.Model):
         total_spending = sum(spending_per_category.values())
 
         if len(spending_per_category) > 0:
-            average_spending = total_spending / len(spending_per_category)
+            average_spending = round((total_spending / len(spending_per_category)), 2)
 
         for category in spending_per_category:
-            spending_percentage_per_category[category] = (
-                spending_per_category[category] * 100 / total_spending
+            spending_percentage_per_category[category] = round(
+                (spending_per_category[category] * 100 / total_spending), 2
             )
 
         spending_data["spending_per_category"] = spending_per_category
