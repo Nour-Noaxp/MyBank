@@ -69,8 +69,18 @@ def budget_auto_assign_view(request):
 
 
 def reports_view(request):
-    spending_data = Category.reports_data
-    return render(request, "reports.html", {"spending_data": spending_data})
+    spending_data = Category.reports_data()
+    chart_labels = list(spending_data["spending_per_category"].keys())
+    chart_data = list(spending_data["spending_per_category"].values())
+    return render(
+        request,
+        "reports.html",
+        {
+            "spending_data": spending_data,
+            "chart_labels": chart_labels,
+            "chart_data": chart_data,
+        },
+    )
 
 
 def account_create_view(request):
