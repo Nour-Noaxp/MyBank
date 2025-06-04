@@ -5,9 +5,9 @@
   <div class="reports flex h-screen border-t">
     <div class="report_graph w-3/4 border-r">
       <canvas class="myChart" data-chart-labels="{{ chart_labels }}" data-chart-data="{{ chart_data }}"></canvas>
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <script src="{% static "budget/js/transactions.js" %}"></script>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static "budget/js/chart.js" %}"></script>
     <div class="spendings_legend w-1/4">
       <div class="total_spending text-center border-b py-2">
         <h1>Total Spending</h1>

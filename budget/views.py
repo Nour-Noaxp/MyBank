@@ -72,13 +72,16 @@ def reports_view(request):
     spending_data = Category.reports_data()
     chart_labels = list(spending_data["spending_per_category"].keys())
     chart_data = list(spending_data["spending_per_category"].values())
+
+    print("chart labels in view :", chart_labels)
+    print("chart data in view :", chart_data)
     return render(
         request,
         "reports.html",
         {
             "spending_data": spending_data,
-            "chart_labels": chart_labels,
-            "chart_data": chart_data,
+            "chart_labels": json.dumps(chart_labels),
+            "chart_data": json.dumps(chart_data),
         },
     )
 
