@@ -80,6 +80,7 @@ def reports_view(request):
             "spending_data": spending_data,
             "chart_labels": json.dumps(chart_labels),
             "chart_data": json.dumps(chart_data),
+            "total_spending": json.dumps(spending_data["total_spending"]),
         },
     )
 

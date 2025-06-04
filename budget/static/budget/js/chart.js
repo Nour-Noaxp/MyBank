@@ -1,16 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
   const chart = document.querySelector(".myChart");
-  const chart_labels = JSON.parse(chart.dataset.chartLabels);
-  const chart_data = JSON.parse(chart.dataset.chartData);
+  const chartLabels = JSON.parse(chart.dataset.chartLabels);
+  const chartData = JSON.parse(chart.dataset.chartData);
+  const totalSpending = JSON.parse(chart.dataset.totalSpendingData);
 
   new Chart(chart, {
     type: "doughnut",
     data: {
-      labels: chart_labels,
+      labels: chartLabels,
       datasets: [
         {
           label: "Spending per Category",
-          data: chart_data,
+          data: chartData,
           borderWidth: 1,
         },
       ],
