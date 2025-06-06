@@ -51,22 +51,20 @@ document.addEventListener("DOMContentLoaded", () => {
     plugins: [doughnutCenterValue],
   });
 
-  const chartLegend = (chart, labels, data) => {
-    const chartColors = chart.data.datasets[0].backgroundColor;
+  // Generate detailed data on the side
+  const chartColors = chartGraph.data.datasets[0].backgroundColor;
 
-    labels.forEach((label, index) => {
-      const color = chartColors[index];
-      const value = data[index];
+  chartLabels.forEach((label, index) => {
+    const color = chartColors[index];
+    const value = chartData[index];
 
-      spendingPerCategory.innerHTML += `
-        <div class="flex justify-between items-center mb-1">
-          <div class="flex items-center gap-2">
-            <span class="inline-block rounded-full w-3 h-3" style="background-color:${color};"></span>
-            <span class="categories">${label}</span>
-          </div>
-          <div class="spending">${value}€</div>
-        </div>`;
-    });
-  };
-  chartLegend(chartGraph, chartLabels, chartData);
+    spendingPerCategory.innerHTML += `
+      <div class="flex justify-between items-center mb-1">
+        <div class="flex items-center gap-2">
+          <span class="inline-block rounded-full w-3 h-3" style="background-color:${color};"></span>
+          <span class="categories">${label}</span>
+        </div>
+        <div class="spending">${value}€</div>
+      </div>`;
+  });
 });
