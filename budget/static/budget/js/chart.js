@@ -8,15 +8,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const doughnutCenterValue = {
     id: "doughnutCenter",
     beforeDatasetsDraw(chart) {
+      const meta = chart.getDatasetMeta(0);
+      if (!meta.data.length) return;
+
+      const { x: cx, y: cy } = meta.data[0];
       const ctx = chart.ctx;
+
+      const fontSize = Math.round(chart.width / 25);
+      const lineHeight = fontSize * 1.2;
+
       ctx.save();
-      const xCoor = chart.getDatasetMeta(0).data[0].x;
-      const yCoor = chart.getDatasetMeta(0).data[0].y;
-      ctx.font = "20px sans-serif";
+      ctx.font = `${fontSize}px sans-serif`;
+      ctx.fillStyle = "#333";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(`Total Spending`, xCoor, yCoor - 15);
-      ctx.fillText(`${totalSpending}€`, xCoor, yCoor + 15);
+
+      ctx.fillText("Total Spending", cx, cy - lineHeight / 2);
+      ctx.fillText(`${totalSpending} €`, cx, cy + lineHeight / 2);
+      ctx.restore();
     },
   };
 
@@ -28,18 +37,16 @@ document.addEventListener("DOMContentLoaded", () => {
         {
           label: "Spending per Category",
           data: chartData,
-          borderWidth: 1,
+          borderWidth: 2,
         },
       ],
     },
-
     options: {
-      plugins: {
-        legend: {
-          display: false,
-        },
-      },
-      aspectRatio: 2,
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: "65%",
+      plugins: { legend: { display: false } },
+      radius: "70%",
     },
     plugins: [doughnutCenterValue],
   });
