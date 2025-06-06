@@ -1,13 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-  <h1>Your spendings per category</h1>
   <div class="reports flex h-screen border-t">
-    <div class="report_graph w-3/4 border-r">
-      <div class="total-spending py-2">
-        <h1 class="total-spending-title text-center font-bold">Total Spending</h1>
-        <div class="total-spending-value text-center">{{ total_spending }}€</div>
-      </div>
+    <div class="report_graph w-3/4 border-r mt-8">
       <canvas class="myChart" data-chart-labels="{{ chart_labels }}" data-chart-data="{{ chart_data }}" data-total-spending-data="{{ total_spending }}"></canvas>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -26,12 +21,6 @@
           <h1 class="font-bold">Categories</h1>
           <h1 class="font-bold">Spending</h1>
         </div>
-          {% for category, spending in spending_data.spending_per_category.items %}
-          <div class="flex justify-between">
-            <div class="categories">{{ category }}</div>
-            <div class="spending">{{ spending }}€</div>
-          </div>
-          {% endfor %}
       </div>
     </div>
   </div>
