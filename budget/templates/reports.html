@@ -3,7 +3,7 @@
 {% block content %}
   <div class="reports flex h-screen">
     <div class="report_graph w-3/4 border-r -mt-4">
-      <canvas class="myChart mt-8" data-chart-labels="{{ chart_labels }}" data-chart-data="{{ chart_data }}" data-total-spending-data="{{ total_spending }}"></canvas>
+      <canvas class="myChart mt-8" data-chart-labels="{{ chart_labels }}" data-chart-data="{{ chart_data }}" data-chart-percentages="{{ chart_percentages }}" data-total-spending-data="{{ total_spending }}"></canvas>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{% static "budget/js/chart.js" %}"></script>
@@ -16,7 +16,7 @@
         <h1>Average Spending</h1>
         <span class="font-bold text-xl">{{ spending_data.average_spending }}€</span>
       </div>
-      <div class="spending_per_category p-2">
+      <div class="spending_per_category_container p-2">
         <div class="header flex justify-between">
           <h1 class="font-bold">Categories</h1>
           <h1 class="font-bold">Spending</h1>

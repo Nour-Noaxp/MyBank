@@ -70,8 +70,16 @@ def budget_auto_assign_view(request):
 
 def reports_view(request):
     spending_data = Category.reports_data()
-    chart_labels = list(spending_data["spending_per_category"].keys())
-    chart_data = list(spending_data["spending_per_category"].values())
+    chart_labels = list(spending_data["categories"].keys())
+    chart_data = list(spending_data["categories"].values())
+    chart_data = []
+    chart_percentages = []
+    for category in chart_labels:
+        spending = spending_data["categories"][category]["spending"]
+        chart_data.append(spending)
+        chart_percentages.append(
+            spending_data["categories"][category]["spending_percentage"]
+        )
 
     return render(
         request,
@@ -80,6 +88,7 @@ def reports_view(request):
             "spending_data": spending_data,
             "chart_labels": json.dumps(chart_labels),
             "chart_data": json.dumps(chart_data),
+            "chart_percentages": json.dumps(chart_percentages),
             "total_spending": json.dumps(spending_data["total_spending"]),
         },
     )

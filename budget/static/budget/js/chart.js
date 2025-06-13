@@ -2,8 +2,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const chart = document.querySelector(".myChart");
   const chartLabels = JSON.parse(chart.dataset.chartLabels);
   const chartData = JSON.parse(chart.dataset.chartData);
+  const chartPercentages = JSON.parse(chart.dataset.chartPercentages);
   const totalSpending = JSON.parse(chart.dataset.totalSpendingData);
-  const spendingPerCategory = document.querySelector(".spending_per_category");
+  const spendingPerCategoryContainer = document.querySelector(
+    ".spending_per_category_container"
+  );
 
   const doughnutCenterValue = {
     id: "doughnutCenter",
@@ -58,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const color = chartColors[index];
     const value = chartData[index];
 
-    spendingPerCategory.innerHTML += `
+    spendingPerCategoryContainer.innerHTML += `
       <div class="flex justify-between items-center mb-1">
         <div class="flex items-center gap-2">
           <span class="inline-block rounded-full w-3 h-3" style="background-color:${color};"></span>
