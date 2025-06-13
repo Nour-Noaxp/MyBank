@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const chartLabels = JSON.parse(chart.dataset.chartLabels);
   const chartData = JSON.parse(chart.dataset.chartData);
   const chartPercentages = JSON.parse(chart.dataset.chartPercentages);
-  const totalSpending = JSON.parse(chart.dataset.totalSpendingData);
+  const totalSpending = chart.dataset.totalSpendingData;
   const spendingPerCategoryContainer = document.querySelector(
     ".spending_per_category_container"
   );

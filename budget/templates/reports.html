@@ -5,8 +5,6 @@
     <div class="report_graph w-3/4 border-r -mt-4">
       <canvas class="myChart mt-8" data-chart-labels="{{ chart_labels }}" data-chart-data="{{ chart_data }}" data-chart-percentages="{{ chart_percentages }}" data-total-spending-data="{{ total_spending }}"></canvas>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{% static "budget/js/chart.js" %}"></script>
     <div class="spendings_legend w-1/4">
       <div class="total_spending text-center border-b py-2">
         <h1>Total Spending</h1>
@@ -24,4 +22,6 @@
       </div>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="{% static "budget/js/chart.js" %}"></script>
 {% endblock %}
