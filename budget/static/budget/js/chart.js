@@ -8,15 +8,24 @@ document.addEventListener("DOMContentLoaded", () => {
   const doughnutCenterValue = {
     id: "doughnutCenter",
     beforeDatasetsDraw(chart) {
+      const meta = chart.getDatasetMeta(0);
+      if (!meta.data.length) return;
+
+      const { x: cx, y: cy } = meta.data[0];
       const ctx = chart.ctx;
+
+      const fontSize = Math.round(chart.width / 25);
+      const lineHeight = fontSize * 1.2;
+
       ctx.save();
-      const xCoor = chart.getDatasetMeta(0).data[0].x;
-      const yCoor = chart.getDatasetMeta(0).data[0].y;
-      ctx.font = "20px sans-serif";
+      ctx.font = `${fontSize}px sans-serif`;
+      ctx.fillStyle = "#333";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(`Total Spending`, xCoor, yCoor - 15);
-      ctx.fillText(`${totalSpending}€`, xCoor, yCoor + 15);
+
+      ctx.fillText("Total Spending", cx, cy - lineHeight / 2);
+      ctx.fillText(`${totalSpending} €`, cx, cy + lineHeight / 2);
+      ctx.restore();
     },
   };
 
@@ -28,38 +37,34 @@ document.addEventListener("DOMContentLoaded", () => {
         {
           label: "Spending per Category",
           data: chartData,
-          borderWidth: 1,
+          borderWidth: 2,
         },
       ],
     },
-
     options: {
-      plugins: {
-        legend: {
-          display: false,
-        },
-      },
-      aspectRatio: 2,
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: "65%",
+      plugins: { legend: { display: false } },
+      radius: "70%",
     },
     plugins: [doughnutCenterValue],
   });
 
-  const chartLegend = (chart, labels, data) => {
-    const chartColors = chart.data.datasets[0].backgroundColor;
+  // Generate detailed data on the side
+  const chartColors = chartGraph.data.datasets[0].backgroundColor;
 
-    labels.forEach((label, index) => {
-      const color = chartColors[index];
-      const value = data[index];
+  chartLabels.forEach((label, index) => {
+    const color = chartColors[index];
+    const value = chartData[index];
 
-      spendingPerCategory.innerHTML += `
-        <div class="flex justify-between items-center mb-1">
-          <div class="flex items-center gap-2">
-            <span class="inline-block rounded-full w-3 h-3" style="background-color:${color};"></span>
-            <span class="categories">${label}</span>
-          </div>
-          <div class="spending">${value}€</div>
-        </div>`;
-    });
-  };
-  chartLegend(chartGraph, chartLabels, chartData);
+    spendingPerCategory.innerHTML += `
+      <div class="flex justify-between items-center mb-1">
+        <div class="flex items-center gap-2">
+          <span class="inline-block rounded-full w-3 h-3" style="background-color:${color};"></span>
+          <span class="categories">${label}</span>
+        </div>
+        <div class="spending">${value}€</div>
+      </div>`;
+  });
 });
