@@ -78,32 +78,35 @@ class Category(models.Model):
 
     @classmethod
     def reports_data(cls):
+        total_spending = (
+            Transaction.objects.aggregate(total=Sum("outflow"))["total"] or 0
+        )
+
+        if total_spending == 0:
+            return {
+                "categories": {},
+                "total_spending": 0,
+                "average_spending": 0,
+            }
         spending_data = {}
-        spending_per_category = {}
-        spending_percentage_per_category = {}
-        total_spending = 0
-        average_spending = 1
+        categories = {}
+        average_spending = 0
 
         for category in Category.objects.all():
-            if category.transaction_set.exists():
-                spending_per_category[category.name] = (
-                    category.transaction_set.aggregate(Sum("outflow"))["outflow__sum"]
-                )
+            if category.transactions.exists():
+                spending = category.transactions.aggregate(Sum("outflow"))[
+                    "outflow__sum"
+                ]
+                spending_percentage = round(spending * 100 / total_spending, 2)
+                categories[category.name] = {
+                    "spending": spending,
+                    "spending_percentage": spending_percentage,
+                }
 
-        total_spending = sum(spending_per_category.values())
+        if len(categories) > 0:
+            average_spending = round((total_spending / len(categories)), 2)
 
-        if len(spending_per_category) > 0:
-            average_spending = round((total_spending / len(spending_per_category)), 2)
-
-        for category in spending_per_category:
-            spending_percentage_per_category[category] = round(
-                (spending_per_category[category] * 100 / total_spending), 2
-            )
-
-        spending_data["spending_per_category"] = spending_per_category
-        spending_data["spending_percentage_per_category"] = (
-            spending_percentage_per_category
-        )
+        spending_data["categories"] = categories
         spending_data["total_spending"] = total_spending
         spending_data["average_spending"] = average_spending
 
@@ -113,7 +116,11 @@ class Category(models.Model):
 class Transaction(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     category = models.ForeignKey(
-        Category, blank=True, null=True, on_delete=models.CASCADE
+        Category,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="transactions",
     )
     date = models.DateTimeField(blank=False, null=False)
     payee = models.CharField(max_length=50, blank=False, null=False)
