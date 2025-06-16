@@ -84,6 +84,9 @@ class Category(models.Model):
                 Transaction.objects.aggregate(total=Sum("outflow"))["total"] or 0
             ),
             "average_spending": 0,
+            "chart_labels": [],
+            "chart_data": [],
+            "chart_percentages": [],
         }
 
         if data["total_spending"] == 0:
@@ -99,6 +102,9 @@ class Category(models.Model):
                     "spending": spending,
                     "spending_percentage": spending_percentage,
                 }
+                data["chart_labels"].append(category.name)
+                data["chart_data"].append(spending)
+                data["chart_percentages"].append(spending_percentage)
 
         if len(data["categories"]) > 0:
             data["average_spending"] = round(
