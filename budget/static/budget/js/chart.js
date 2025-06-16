@@ -1,12 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   const chart = document.querySelector(".my-chart");
-
-  let { chartLabels, chartData, chartPercentages, totalSpending } =
-    chart.dataset;
-  chartLabels = JSON.parse(chartLabels);
-  chartData = JSON.parse(chartData);
-  chartPercentages = JSON.parse(chartPercentages);
-
+  const chartLabels = JSON.parse(chart.dataset.chartLabels);
+  const chartData = JSON.parse(chart.dataset.chartData);
+  const chartPercentages = JSON.parse(chart.dataset.chartPercentages);
+  const totalSpending = chart.dataset.totalSpending;
   const spendingPerCategoryContainer = document.querySelector(
     ".spending_per_category_container"
   );
