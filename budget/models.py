@@ -78,39 +78,34 @@ class Category(models.Model):
 
     @classmethod
     def reports_data(cls):
-        total_spending = (
-            Transaction.objects.aggregate(total=Sum("outflow"))["total"] or 0
-        )
+        data = {
+            "categories": {},
+            "total_spending": (
+                Transaction.objects.aggregate(total=Sum("outflow"))["total"] or 0
+            ),
+            "average_spending": 0,
+        }
 
-        if total_spending == 0:
-            return {
-                "categories": {},
-                "total_spending": 0,
-                "average_spending": 0,
-            }
-        spending_data = {}
-        categories = {}
-        average_spending = 0
+        if data["total_spending"] == 0:
+            return data
 
         for category in Category.objects.all():
             if category.transactions.exists():
                 spending = category.transactions.aggregate(Sum("outflow"))[
                     "outflow__sum"
                 ]
-                spending_percentage = round(spending * 100 / total_spending, 2)
-                categories[category.name] = {
+                spending_percentage = round(spending * 100 / data["total_spending"], 2)
+                data["categories"][category.name] = {
                     "spending": spending,
                     "spending_percentage": spending_percentage,
                 }
 
-        if len(categories) > 0:
-            average_spending = round((total_spending / len(categories)), 2)
+        if len(data["categories"]) > 0:
+            data["average_spending"] = round(
+                (data["total_spending"] / len(data["categories"])), 2
+            )
 
-        spending_data["categories"] = categories
-        spending_data["total_spending"] = total_spending
-        spending_data["average_spending"] = average_spending
-
-        return spending_data
+        return data
 
 
 class Transaction(models.Model):
