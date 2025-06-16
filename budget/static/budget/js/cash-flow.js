@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const chart = document.querySelector(".cash-flow-chart");
-  const MONTHS = [
+  const months = [
     "January",
     "February",
     "March",
@@ -14,12 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
     "November",
     "December",
   ];
-  const CHART_COLORS = {
+  const chartColors = {
     red: "rgb(255, 99, 132)",
     blue: "rgb(54, 162, 235)",
   };
 
-  const labels = MONTHS;
+  const labels = months;
 
   const data = {
     labels: labels,
@@ -29,16 +29,16 @@ document.addEventListener("DOMContentLoaded", () => {
         data: [
           1200, 1250, 1200, 1380, 1214, 900, 2356, 1300, 1400, 1250, 1500, 1450,
         ],
-        borderColor: CHART_COLORS.red,
-        backgroundColor: CHART_COLORS.red,
+        borderColor: chartColors.blue,
+        backgroundColor: chartColors.blue,
         borderWidth: 2,
         borderRadius: 5,
       },
       {
         label: "Spending",
         data: [20, 1300, 1190, 324, 1214, 356, 2356, 276, 55, 60, 80, 98],
-        borderColor: CHART_COLORS.blue,
-        backgroundColor: CHART_COLORS.blue,
+        borderColor: chartColors.red,
+        backgroundColor: chartColors.red,
         borderWidth: 2,
         borderRadius: 5,
       },
