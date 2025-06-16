@@ -68,6 +68,22 @@ def budget_auto_assign_view(request):
     return redirect("dashboard")
 
 
+def reports_view(request):
+    spending_data = Category.reports_data()
+
+    return render(
+        request,
+        "reports.html",
+        {
+            "spending_data": spending_data,
+            "chart_labels": json.dumps(spending_data["chart_labels"]),
+            "chart_data": json.dumps(spending_data["chart_data"]),
+            "chart_percentages": json.dumps(spending_data["chart_percentages"]),
+            "total_spending": spending_data["total_spending"],
+        },
+    )
+
+
 def account_create_view(request):
     form = AccountForm
     budget = Budget.objects.first()

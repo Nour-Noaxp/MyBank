@@ -76,11 +76,52 @@ class Category(models.Model):
             "remaining_budget_for_partial_assign": remaining_budget_for_partial_assign,
         }
 
+    @classmethod
+    def reports_data(cls):
+        data = {
+            "categories": {},
+            "total_spending": (
+                Transaction.objects.aggregate(total=Sum("outflow"))["total"] or 0
+            ),
+            "average_spending": 0,
+            "chart_labels": [],
+            "chart_data": [],
+            "chart_percentages": [],
+        }
+
+        if data["total_spending"] == 0:
+            return data
+
+        for category in Category.objects.all():
+            if category.transactions.exists():
+                spending = category.transactions.aggregate(Sum("outflow"))[
+                    "outflow__sum"
+                ]
+                spending_percentage = round(spending * 100 / data["total_spending"], 2)
+                data["categories"][category.name] = {
+                    "spending": spending,
+                    "spending_percentage": spending_percentage,
+                }
+                data["chart_labels"].append(category.name)
+                data["chart_data"].append(spending)
+                data["chart_percentages"].append(spending_percentage)
+
+        if len(data["categories"]) > 0:
+            data["average_spending"] = round(
+                (data["total_spending"] / len(data["categories"])), 2
+            )
+
+        return data
+
 
 class Transaction(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     category = models.ForeignKey(
-        Category, blank=True, null=True, on_delete=models.CASCADE
+        Category,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="transactions",
     )
     date = models.DateTimeField(blank=False, null=False)
     payee = models.CharField(max_length=50, blank=False, null=False)

@@ -11,6 +11,7 @@ urlpatterns = [
         name="budget-auto-assign",
     ),
     path("dashboard", views.dashboard_view, name="dashboard"),
+    path("reports", views.reports_view, name="reports"),
     path("accounts", views.accounts_list_view, name="accounts-list"),
     path("accounts/new", views.account_create_view, name="account-create"),
     path("accounts/<account_id>", views.account_show_view, name="account-show"),
