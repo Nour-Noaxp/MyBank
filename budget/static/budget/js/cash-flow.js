@@ -4,21 +4,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const income = chart.dataset.chartIncome;
   const spending = chart.dataset.chartSpending;
 
-  // const months_in_letters = [
-  //   "January",
-  //   "February",
-  //   "March",
-  //   "April",
-  //   "May",
-  //   "June",
-  //   "July",
-  //   "August",
-  //   "September",
-  //   "October",
-  //   "November",
-  //   "December",
-  // ];
-
   const chartColors = {
     red: "rgb(255, 99, 132)",
     blue: "rgb(54, 162, 235)",
