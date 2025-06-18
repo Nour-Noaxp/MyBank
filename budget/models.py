@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import Sum
+from django.db.models.functions import Extract
 from django.core.exceptions import ValidationError
 
 
@@ -163,3 +164,31 @@ class Transaction(models.Model):
 
                     pretty_errors.append(msg)
         return pretty_errors
+
+    @classmethod
+    def cashflow_data(cls):
+        data = {"months": [], "income": [], "spending": []}
+        data_qs = (
+            Transaction.objects.values(month=Extract("date", "month"))
+            .annotate(income=Sum("inflow"), spending=Sum("outflow"))
+            .order_by("month")
+        )
+
+        data_qs_months = [elt["month"] for elt in data_qs]
+        data_qs_income = [elt["income"] for elt in data_qs]
+        data_qs_spending = [elt["spending"] for elt in data_qs]
+
+        for month_index in range(1, 13):
+
+            data["months"].append(month_index)
+
+            if month_index in data_qs_months:
+                data["income"].append(data_qs_income[data_qs_months.index(month_index)])
+                data["spending"].append(
+                    data_qs_spending[data_qs_months.index(month_index)]
+                )
+            else:
+                data["income"].append(0)
+                data["spending"].append(0)
+
+        return data

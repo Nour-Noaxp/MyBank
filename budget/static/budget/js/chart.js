@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const chart = document.querySelector(".my-chart");
+  const chart = document.querySelector(".spending-chart");
   const chartLabels = JSON.parse(chart.dataset.chartLabels);
   const chartData = JSON.parse(chart.dataset.chartData);
   const chartPercentages = JSON.parse(chart.dataset.chartPercentages);
