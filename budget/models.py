@@ -173,41 +173,22 @@ class Transaction(models.Model):
             .annotate(income=Sum("inflow"), spending=Sum("outflow"))
             .order_by("month")
         )
-        months_in_letters = {
-            1: "January",
-            2: "February",
-            3: "March",
-            4: "April",
-            5: "May",
-            6: "June",
-            7: "July",
-            8: "August",
-            9: "September",
-            10: "October",
-            11: "November",
-            12: "December",
-        }
 
-        full_data = {"months": [], "income": [], "spending": []}
         data_qs_months = [elt["month"] for elt in data_qs]
         data_qs_income = [elt["income"] for elt in data_qs]
         data_qs_spending = [elt["spending"] for elt in data_qs]
-        for i in range(1, 13):
-            if i in data_qs_months:
-                full_data["months"].append(months_in_letters[i])
-                full_data["income"].append(data_qs_income[data_qs_months.index(i)])
-                full_data["spending"].append(data_qs_spending[data_qs_months.index(i)])
+
+        for month_index in range(1, 13):
+
+            data["months"].append(month_index)
+
+            if month_index in data_qs_months:
+                data["income"].append(data_qs_income[data_qs_months.index(month_index)])
+                data["spending"].append(
+                    data_qs_spending[data_qs_months.index(month_index)]
+                )
             else:
-                full_data["months"].append(months_in_letters[i])
-                full_data["income"].append(0)
-                full_data["spending"].append(0)
-
-        months = full_data["months"]
-        income = full_data["income"]
-        spending = full_data["spending"]
-
-        data["months"] = months
-        data["income"] = income
-        data["spending"] = spending
+                data["income"].append(0)
+                data["spending"].append(0)
 
         return data
