@@ -70,6 +70,7 @@ def budget_auto_assign_view(request):
 
 def reports_view(request):
     spending_data = Category.reports_data()
+    cashflow_data = Transaction.cashflow_data()
 
     return render(
         request,
@@ -80,6 +81,10 @@ def reports_view(request):
             "chart_data": json.dumps(spending_data["chart_data"]),
             "chart_percentages": json.dumps(spending_data["chart_percentages"]),
             "total_spending": spending_data["total_spending"],
+            "cashflow_data": cashflow_data,
+            "months": cashflow_data["months"],
+            "income": cashflow_data["income"],
+            "spending": cashflow_data["spending"],
         },
     )
 

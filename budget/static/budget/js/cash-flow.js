@@ -1,34 +1,37 @@
 document.addEventListener("DOMContentLoaded", () => {
   const chart = document.querySelector(".cash-flow-chart");
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+  const months = chart.dataset.chartMonths;
+  const income = chart.dataset.chartIncome;
+  const spending = chart.dataset.chartSpending;
+
+  // const months_in_letters = [
+  //   "January",
+  //   "February",
+  //   "March",
+  //   "April",
+  //   "May",
+  //   "June",
+  //   "July",
+  //   "August",
+  //   "September",
+  //   "October",
+  //   "November",
+  //   "December",
+  // ];
+
   const chartColors = {
     red: "rgb(255, 99, 132)",
     blue: "rgb(54, 162, 235)",
   };
 
-  const labels = months;
+  const labels = ["5", "8", "10"];
 
   const data = {
-    labels: labels,
+    labels: months,
     datasets: [
       {
         label: "Income",
-        data: [
-          1200, 1250, 1200, 1380, 1214, 900, 2356, 1300, 1400, 1250, 1500, 1450,
-        ],
+        data: income,
         borderColor: chartColors.blue,
         backgroundColor: chartColors.blue,
         borderWidth: 2,
@@ -36,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       {
         label: "Spending",
-        data: [20, 1300, 1190, 324, 1214, 356, 2356, 276, 55, 60, 80, 98],
+        data: spending,
         borderColor: chartColors.red,
         backgroundColor: chartColors.red,
         borderWidth: 2,
