@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const chart = document.querySelector(".cash-flow-chart");
   const cashflow = JSON.parse(chart.dataset.cashflow);
-  const { income, spending } = cashflow;
   const chartColors = {
     red: "rgb(255, 99, 132)",
     blue: "rgb(54, 162, 235)",
@@ -26,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     datasets: [
       {
         label: "Income",
-        data: income,
+        data: cashflow.income,
         borderColor: chartColors.blue,
         backgroundColor: chartColors.blue,
         borderWidth: 2,
@@ -34,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       {
         label: "Spending",
-        data: spending,
+        data: cashflow.spending,
         borderColor: chartColors.red,
         backgroundColor: chartColors.red,
         borderWidth: 2,
