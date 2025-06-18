@@ -81,9 +81,7 @@ def reports_view(request):
             "chart_data": json.dumps(spending_data["chart_data"]),
             "chart_percentages": json.dumps(spending_data["chart_percentages"]),
             "total_spending": spending_data["total_spending"],
-            "months": json.dumps(cashflow_data["months"]),
-            "income": json.dumps(cashflow_data["income"]),
-            "spending": json.dumps(cashflow_data["spending"]),
+            "cashflow_data": json.dumps(cashflow_data),
         },
     )
 

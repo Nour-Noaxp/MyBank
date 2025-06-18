@@ -1,12 +1,26 @@
 document.addEventListener("DOMContentLoaded", () => {
   const chart = document.querySelector(".cash-flow-chart");
-  const months = JSON.parse(chart.dataset.chartMonths);
-  const income = JSON.parse(chart.dataset.chartIncome);
-  const spending = JSON.parse(chart.dataset.chartSpending);
+  const cashflow = JSON.parse(chart.dataset.cashflow);
+  const income = cashflow.income;
+  const spending = cashflow.spending;
   const chartColors = {
     red: "rgb(255, 99, 132)",
     blue: "rgb(54, 162, 235)",
   };
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   const data = {
     labels: months,
