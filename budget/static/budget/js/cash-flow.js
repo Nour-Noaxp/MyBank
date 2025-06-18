@@ -8,10 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
     blue: "rgb(54, 162, 235)",
   };
 
-  const labels = months;
-
   const data = {
-    labels: labels,
+    labels: months,
     datasets: [
       {
         label: "Income",

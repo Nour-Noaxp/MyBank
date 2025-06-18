@@ -188,23 +188,23 @@ class Transaction(models.Model):
             12: "December",
         }
 
-        clean_data = {"months": [], "income": [], "spending": []}
+        full_data = {"months": [], "income": [], "spending": []}
         data_qs_months = [elt["month"] for elt in data_qs]
         data_qs_income = [elt["income"] for elt in data_qs]
         data_qs_spending = [elt["spending"] for elt in data_qs]
         for i in range(1, 13):
             if i in data_qs_months:
-                clean_data["months"].append(months_in_letters[i])
-                clean_data["income"].append(data_qs_income[data_qs_months.index(i)])
-                clean_data["spending"].append(data_qs_spending[data_qs_months.index(i)])
+                full_data["months"].append(months_in_letters[i])
+                full_data["income"].append(data_qs_income[data_qs_months.index(i)])
+                full_data["spending"].append(data_qs_spending[data_qs_months.index(i)])
             else:
-                clean_data["months"].append(months_in_letters[i])
-                clean_data["income"].append(0)
-                clean_data["spending"].append(0)
+                full_data["months"].append(months_in_letters[i])
+                full_data["income"].append(0)
+                full_data["spending"].append(0)
 
-        months = clean_data["months"]
-        income = clean_data["income"]
-        spending = clean_data["spending"]
+        months = full_data["months"]
+        income = full_data["income"]
+        spending = full_data["spending"]
 
         data["months"] = months
         data["income"] = income
