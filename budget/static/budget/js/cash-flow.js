@@ -1,18 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
   const chart = document.querySelector(".cash-flow-chart");
-  const months = chart.dataset.chartMonths;
-  const income = chart.dataset.chartIncome;
-  const spending = chart.dataset.chartSpending;
-
+  const months = JSON.parse(chart.dataset.chartMonths);
+  const income = JSON.parse(chart.dataset.chartIncome);
+  const spending = JSON.parse(chart.dataset.chartSpending);
   const chartColors = {
     red: "rgb(255, 99, 132)",
     blue: "rgb(54, 162, 235)",
   };
 
-  const labels = ["5", "8", "10"];
+  const labels = months;
 
   const data = {
-    labels: months,
+    labels: labels,
     datasets: [
       {
         label: "Income",
